@@ -1,0 +1,102 @@
+﻿@model IEnumerable<DCompany.Models.Order>
+
+@{
+    ViewBag.Title = "Process";
+    MvcPaging.IPagedList<DCompany.Models.Order> oldOrder = (MvcPaging.IPagedList<DCompany.Models.Order>)ViewBag.listOrder;
+}
+
+<div class="container">
+  <ul class="breadcrumb ">
+    <li class="active">
+      <h4>Những đơn hàng đang làm</h4>
+    </li>
+  </ul>
+</div>
+
+  @using (Ajax.BeginForm("Process", "Order",
+                            new AjaxOptions { UpdateTargetId = "grid-list", HttpMethod = "get", LoadingElementId = "loading", OnBegin = "beginPaging", OnSuccess = "successPaging", OnFailure = "failurePaging" },
+                            new { id = "frm-search" }))
+      {
+   <div id="grid-list">
+              @{ Html.RenderPartial("ListProcess", oldOrder); }
+          </div>
+  }
+		
+<script>
+    function beginPaging(args) {
+        // Animate
+        $('#grid-list').fadeOut('normal');
+    }
+    function successPaging() {
+        // Animate
+        $('#grid-list').fadeIn('normal');
+
+    }
+    function failurePaging() {
+
+    }
+    function changeState(stateId, orderId) {
+        var confirmId = orderId;
+        if (stateId == 5) {
+            stateId = 7;
+            $.ajax({
+                url: "/Order/ChangeState",
+                type: "GET",
+                data: { Id: stateId, OrderId: orderId },
+                success: function (data) {
+                    location.reload();
+                }
+            });
+        }
+        if (stateId == 4) { stateId = 3;}
+        if (stateId != 3 && stateId!=5 && stateId <7 && stateId!=6) {
+            stateId = stateId + 1;
+            $.ajax({
+                url: "/Order/ChangeState",
+                type: "GET",
+                data: { Id: stateId, OrderId: orderId },
+                success: function (data) {
+                    location.reload();
+                }
+            });
+        }
+        else{
+            if(stateId == 3 || stateId==6){  
+                document.getElementById(confirmId).setAttribute("style", "display:normal");
+            }
+        }
+      
+         
+    }
+    function changeState2(stateId, orderId) {
+        if (stateId == 4) { stateId = 3; }
+        if (stateId == 3) {
+            stateId = stateId + 2;
+        }
+        else if (stateId == 6) { stateId = stateId - 1; }
+        $.ajax({
+            url: "/Order/ChangeState",
+            type: "GET",
+            data: { Id: stateId, OrderId: orderId },
+            success: function (data) {
+                location.reload();
+            }
+        });
+    }
+        
+    function changeState3(stateId, orderId) {
+        if (stateId == 4) { stateId = 3; }
+        if (stateId == 6) {
+            stateId = stateId - 2;
+        }
+        else if (stateId == 3) { stateId = stateId + 1; }
+        $.ajax({
+            url: "/Order/ChangeState",
+            type: "GET",
+            data: { Id: stateId, OrderId: orderId },
+            success: function (data) {
+                location.reload();
+            }
+        });
+    }
+</script>

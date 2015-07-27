@@ -1,0 +1,202 @@
+﻿@model MvcPaging.IPagedList<DCompany.Models.Order>
+@using MvcPaging
+<div class="container content-panel">
+    <table border="1" style="color: Black; background-color: White; border-color: #999999; border-width: 1px; border-style: Solid; width: 100%; border-collapse: collapse;">
+
+        <tr style="color: White; background-color: Black; font-weight: bold;">
+            <th style="width: 40%">Thông tin đơn hàng
+            </th>
+            <th>Trạng thái</th>
+            <th style="width: 80px"></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+ 
+            <tr style="border: 1px solid #ddd; text-align: center">
+
+                <td>
+                    <table class="table">
+                        <tr>
+
+                            <td style="font-weight: bold">@Html.DisplayFor(modelItem => item.Name)</td>
+
+                        </tr>
+                        <tr>
+                            <td>Ngày giao</td>
+                            <td>
+                                @item.Deadline.Value.ToString("dd/MM/yyyy")
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Tên khách hàng</td>
+                            <td>
+                                <a href="/Customer/Details/@item.CustomerId">@item.Customer.Name </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Số điện thoại</td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Customer.Address)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Công ty</td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Customer.CompanyName)
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+
+                @{
+    
+   
+            if (item.State == 1)
+            {  <td style="text-align: center; padding: 20px">
+                <div class="progress">
+                    Đơn hàng mới 
+                </div>
+            </td>
+                    if (ViewBag.AllowEdit == true) {
+                     <td>
+                        <div class="btn mybtn" onclick='changeState(@item.State, @item.Id)'>
+                            <i class='icon icon-retweet'></i>
+                        </div>
+                    </td>}
+                   
+                      
+            }
+            if (item.State == 2)
+            {
+                    <td style="text-align: center; padding: 20px">
+                        <div class="progress progress-complete progress-striped active">
+                            <div class="bar" style="width: 30%; text-align: center"> Nhập vật tư</div>
+                           
+                        </div>
+                    </td>
+                     if (ViewBag.AllowEdit == true) {
+                    <td>
+                        <div class="btn mybtn" onclick='changeState(@item.State, @item.Id)'><i class='icon icon-retweet'></i></div>
+
+                    </td>
+                }
+            }
+            if (item.State == 3)
+            {  <td style="text-align: center; padding: 20px">
+                <div class="progress progress-info progress-striped active">
+                    <div class="bar" style="width: 50%; text-align: center;">Đang sản xuất</div>
+                </div>
+                 <div id="@item.Id" style="display:none">
+                    <br />
+                    <div class="btn mybtn"  onclick="changeState2(@item.State, @item.Id)"><i class="icon icon-ok"></i></div>
+
+                    <div class="btn mybtn" onclick="changeState3(@item.State, @item.Id)"><i class="bicon icon-remove"></i></div>
+                </div>
+            </td>
+                     if (ViewBag.AllowEdit == true) {
+                    <td>
+                        <div class="btn mybtn" onclick='changeState(@item.State, @item.Id)'><i class='icon icon-retweet'></i></div>
+                        
+                    </td>
+                }
+            }
+            if (item.State == 4)
+            { 
+                    <td style="text-align: center; padding: 20px">
+                        <div class="progress progress-danger progress-striped active">
+                            <div class="bar" style="width: 50%; text-align: center;">Sản xuất lại !</div>
+                        </div>
+                                 <div id="@item.Id" style="display:none">
+                    <br />
+                    <div class="btn mybtn"  onclick="changeState2(@item.State, @item.Id)"><i class="icon icon-ok"></i></div>
+
+                    <div class="btn mybtn" onclick="changeState3(@item.State, @item.Id)"><i class="bicon icon-remove"></i></div>
+                </div>
+
+                    </td>
+                     if (ViewBag.AllowEdit == true) {
+                    <td>
+                        <div class="btn mybtn" onclick='changeState(@item.State, @item.Id)'><i class='icon icon-retweet'></i></div>
+                
+                    </td>
+                }
+            }
+            if (item.State == 5)
+            {
+                    <td style="text-align: center; padding: 20px">
+                        <div class="progress progress-success progress-striped active">
+                            <div class="bar" style="width: 75%; text-align: center;">Hoàn thành...</div>
+                        </div>
+                    </td>
+                     if (ViewBag.AllowEdit == true) {
+                    <td>
+                        <div class="btn mybtn" onclick='changeState(@item.State, @item.Id)'><i class='icon icon-retweet'></i></div>
+                    </td>
+                }
+            }
+
+            if (item.State == 7)
+            {
+                    <td style="text-align: center; padding: 20px">
+                        <div class="progress progress-warning progress-striped">
+                            <div class="bar" style="width: 100%; text-align: center;">Đã giao hàng</div>
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn" disabled><i class='icon icon-ok'></i></button>
+                    </td>
+            }
+  
+                }
+               
+            </tr>
+        }
+
+    </table>
+</div>
+<div class="pager1">
+    @Html.Raw(Ajax.Pager(
+            new Options
+            {
+                PageSize = Model.PageSize,
+                TotalItemCount = Model.TotalItemCount,
+                CurrentPage = Model.PageNumber,
+                ItemTexts = new ItemTexts() { Next = "Next", Previous = "Previous", Page = "P" },
+                ItemIcon = new ItemIcon() { First = "icon-backward", Previous = "icon-chevron-left", Next = "icon-chevron-right", Last = "icon-forward" },
+                TooltipTitles = new TooltipTitles() { Next = "Next page", Previous = "Previous page", Page = "Page {0}." },
+                Size = Size.normal,
+                Alignment = Alignment.centered,
+                IsShowControls = true,
+                IsShowFirstLast = true,
+                CssClass = ""
+            },
+            new AjaxOptions
+            {
+                UpdateTargetId = "grid-list",
+                OnBegin = "beginPaging",
+                OnSuccess = "successPaging",
+                OnFailure = "failurePaging"
+            }, new { controller = "Order", action = "Process", employee_name = ViewData["employee_name"] }))
+</div>
+<script>
+    function deleteConfirm(id) {
+        var ok = confirm("Bạn có chắc chắn xóa ?");
+        if (ok) {
+            $.ajax({
+                url: "/Order/DeleteConfirmed",
+                type: "GET",
+                data: { Id: id },
+                success: function (data) {
+                    location.reload();
+                }
+            });
+        }
+
+
+    }
+    function edit(id) {
+        window.location = "/Order/Edit/" + id;
+    }
+
+</script>

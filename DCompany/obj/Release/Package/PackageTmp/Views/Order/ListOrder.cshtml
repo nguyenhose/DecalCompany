@@ -1,0 +1,79 @@
+﻿@using MvcPaging
+@model IPagedList<DCompany.Models.Order>
+@{
+    ViewBag.Title = "ListOrder";
+}
+
+
+<div class="container">
+    <table border="1" style="color: Black; background-color: White; border-color: #999999; border-width: 1px; border-style: Solid; width: 100%; border-collapse: collapse;">
+        <tr style="color: White; background-color: Black; font-weight: bold;">
+            <th>Đơn hàng đã giao dịch
+            </th>
+            <th>Ngày hoàn thành
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr style="border: 1px solid #ddd">
+                <td>
+                    <table class="table">
+                        <tr>
+                            <td>Tên đơn hàng:</td>
+                            <td>
+                                <b>@item.Name</b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Số tiền giao dịch:</td>
+                            <td>
+
+                                <div class="money" style="margin-top: 10px; text-align: left">
+                                    @{
+            var tranloans = String.Format(System.Globalization.CultureInfo.CreateSpecificCulture("vi-VN"), "{0:C}", item.TotalCash);
+            tranloans = tranloans.Substring(0, tranloans.LastIndexOf(','));
+                                        @tranloans
+                                    }đ
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Ngày kí:</td>
+                            <td>
+                                @item.DateInfo.Value.Day/@item.DateInfo.Value.Month/@item.DateInfo.Value.Year
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="text-align: center">@item.Deadline.Value.Day/@item.Deadline.Value.Month/@item.Deadline.Value.Year</td>
+            </tr>
+        }
+
+    </table>
+</div>
+<div class="pager1">
+    @Html.Raw(Ajax.Pager(
+            new Options
+            {
+                PageSize = Model.PageSize,
+                TotalItemCount = Model.TotalItemCount,
+                CurrentPage = Model.PageNumber,
+                ItemTexts = new ItemTexts() { Next = "Next", Previous = "Previous", Page = "P" },
+                ItemIcon = new ItemIcon() { First = "icon-backward", Previous = "icon-chevron-left", Next = "icon-chevron-right", Last = "icon-forward" },
+                TooltipTitles = new TooltipTitles() { Next = "Next page", Previous = "Previous page", Page = "Page {0}." },
+                Size = Size.normal,
+                Alignment = Alignment.centered,
+                IsShowControls = true,
+                IsShowFirstLast = true,
+                CssClass = ""
+            },
+            new AjaxOptions
+            {
+                UpdateTargetId = "grid-list",
+                OnBegin = "beginPaging",
+                OnSuccess = "successPaging",
+                OnFailure = "failurePaging"
+            }, new { controller = "Order", action = "Create", employee_name = ViewData["employee_name"] }))
+</div>
+

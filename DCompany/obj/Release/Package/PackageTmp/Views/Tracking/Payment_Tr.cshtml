@@ -1,0 +1,66 @@
+﻿@{
+    Layout = null;
+      @model List<DCompany.Models.PayMent>
+}
+
+
+<div class="form-horizontal">
+    <div class="row">
+      
+        @if (Model != null)
+        {
+             var list = Model.Select(s => s.Staff).ToList().Distinct();
+            <div class="span2">
+                <h4>Theo nhân viên</h4>
+                @foreach (var name in list)
+                {
+                    <div class="nameStaff" onclick="Filter(@name.Id)">
+                        @name.StaffName
+                    </div>
+               
+                }
+            </div>
+            <div class="span8">
+            <table class="table" id="daica">
+                    <th>Tên</th>
+            <th>Khách hàng</th>
+            <th>Số tiền thanh toán</th>
+        
+            <th>Ngày thanh toán</th>
+            <th>Người thao tác</th>
+            @foreach (var item in Model)
+            { 
+            <tr class="@item.Staff.Id">
+                @if(item.Invisible==true){ <td style="color:red">
+                    @item.Customer.Name
+                </td>}
+                else{ <td>@item.Customer.Name</td> }
+               
+                <td>
+                     @{
+     var cash = String.Format(System.Globalization.CultureInfo.CreateSpecificCulture("vi-VN"), "{0:C}",  item.Cash);
+     cash = cash.Substring(0, cash.LastIndexOf(','));
+     @cash 
+                   
+                    } (đ)
+                </td>
+            
+                <td>
+                    @item.DatePay.Value.ToString("dd/MM/yyyy HH:mm")
+                </td>
+                   <td>
+                    @item.Staff.StaffName 
+                </td>
+            </tr>
+            }
+                     </table>
+                </div>
+        }
+    </div>
+    </div>
+<script>
+    function Filter(id) {
+        $('#daica tr:not(.' + id + ')').hide();
+        $('.' + id).show();
+    }
+</script>

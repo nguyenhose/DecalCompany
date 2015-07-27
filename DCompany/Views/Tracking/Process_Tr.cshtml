@@ -1,0 +1,99 @@
+﻿@{
+    Layout = null;
+    @model List<DCompany.Models.Order>
+}
+
+
+
+<div class="form-horizontal">
+    <div class="row">
+
+        @if (Model != null)
+        {
+            var list = Model.Select(s => s.Staff).ToList().Distinct();
+            <div class="span2">
+                <h4>Theo nhân viên</h4>
+                @foreach (var name in list)
+                {
+                    <div class="nameStaff" onclick="Filter(@name.Id)">
+                        @name.StaffName
+                    </div>
+               
+                }
+            </div>
+            <div class="span8">
+                <table class="table" id="daica">
+                    <th>Tên</th>
+                    <th>Tên Hợp Đồng</th>
+                    <th>Ngày thao tác</th>
+                    <th>Ngày giao</th>
+                    <th>Giá trị </th>
+                    <th>Tên khách hàng</th>
+                    <th>Trạng thái</th>
+                    <th>Người thực hiện </th>
+                    @foreach (var item in Model)
+                    { 
+                        <tr class="@item.Staff.Id">
+                            @if (item.Invisible == true)
+                            {
+                                <td style="color: red">
+                                    @item.Name
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    @item.Name
+                                </td>}
+
+                            <td>
+                                @item.DateInfo.Value.ToString("dd/MM/yyyy")
+                            </td>
+                            <td>
+                                @item.Deadline.Value.ToString("dd/MM/yyyy")
+                            </td>
+                            <td>
+                                @{
+                            var cash = String.Format(System.Globalization.CultureInfo.CreateSpecificCulture("vi-VN"), "{0:C}", item.TotalCash);
+                            cash = cash.Substring(0, cash.LastIndexOf(','));
+                                    @cash 
+                   
+                                }(đ)
+                            </td>
+                            <td>
+                                @item.Customer.Name
+                            </td>
+                            @if (item.State == 1)
+                            { <td>Đơn hàng mới</td>}
+                            @if (item.State == 2)
+                            { <td>Nhập vật tư</td>}
+                            @if (item.State == 3)
+                            { <td>Đang sản xuất</td>}
+                            @if (item.State == 5)
+                            { <td>Hoàn thành</td>}
+                            @if (item.State == 4)
+                            { <td>Sản xuất lại</td>}
+                            @if (item.State == 6)
+                            { <td>Bị lỗi</td>}
+                            @if (item.State == 7)
+                            { <td>Giao hàng</td>}
+                            <td>
+                                @item.Staff.StaffName
+                            </td>
+                        </tr>
+            
+                    }
+                </table>
+            </div>      
+
+        }
+
+    </div>
+</div>
+
+<script>
+    function Filter(id) {
+        $('#daica tr:not(.' + id + ')').hide();
+        $('.' + id).show();
+    }
+</script>

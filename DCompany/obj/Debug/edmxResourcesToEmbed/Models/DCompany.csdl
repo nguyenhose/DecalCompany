@@ -1,0 +1,350 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="DecalCompanyModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="DecalCompanyEntities1" p1:LazyLoadingEnabled="true">
+    <EntitySet Name="Customers" EntityType="DecalCompanyModel.Customer" />
+    <EntitySet Name="Modules" EntityType="DecalCompanyModel.Module" />
+    <EntitySet Name="Orders" EntityType="DecalCompanyModel.Order" />
+    <EntitySet Name="OrderDetails" EntityType="DecalCompanyModel.OrderDetail" />
+    <EntitySet Name="PayMents" EntityType="DecalCompanyModel.PayMent" />
+    <EntitySet Name="Permissions" EntityType="DecalCompanyModel.Permission" />
+    <EntitySet Name="Staffs" EntityType="DecalCompanyModel.Staff" />
+    <EntitySet Name="Stores" EntityType="DecalCompanyModel.Store" />
+    <EntitySet Name="Tasks" EntityType="DecalCompanyModel.Task" />
+    <AssociationSet Name="FK_Customer_Staff" Association="DecalCompanyModel.FK_Customer_Staff">
+      <End Role="Staff" EntitySet="Staffs" />
+      <End Role="Customer" EntitySet="Customers" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Order_Customer" Association="DecalCompanyModel.FK_Order_Customer">
+      <End Role="Customer" EntitySet="Customers" />
+      <End Role="Order" EntitySet="Orders" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PayMent_Customer" Association="DecalCompanyModel.FK_PayMent_Customer">
+      <End Role="Customer" EntitySet="Customers" />
+      <End Role="PayMent" EntitySet="PayMents" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Permission_Module" Association="DecalCompanyModel.FK_Permission_Module">
+      <End Role="Module" EntitySet="Modules" />
+      <End Role="Permission" EntitySet="Permissions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Order_User" Association="DecalCompanyModel.FK_Order_User">
+      <End Role="Staff" EntitySet="Staffs" />
+      <End Role="Order" EntitySet="Orders" />
+    </AssociationSet>
+    <AssociationSet Name="FK_OrderDetail_Order" Association="DecalCompanyModel.FK_OrderDetail_Order">
+      <End Role="Order" EntitySet="Orders" />
+      <End Role="OrderDetail" EntitySet="OrderDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PayMent_Staff" Association="DecalCompanyModel.FK_PayMent_Staff">
+      <End Role="Staff" EntitySet="Staffs" />
+      <End Role="PayMent" EntitySet="PayMents" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Permission_User" Association="DecalCompanyModel.FK_Permission_User">
+      <End Role="Staff" EntitySet="Staffs" />
+      <End Role="Permission" EntitySet="Permissions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Store_User" Association="DecalCompanyModel.FK_Store_User">
+      <End EntitySet="Staffs" Role="Staff" />
+      <End EntitySet="Stores" Role="Store" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Task_User" Association="DecalCompanyModel.FK_Task_User">
+      <End Role="Staff" EntitySet="Staffs" />
+      <End Role="Task" EntitySet="Tasks" />
+    </AssociationSet>
+    <EntitySet Name="Processes" EntityType="DecalCompanyModel.Process" />
+    <AssociationSet Name="FK_Process_Order" Association="DecalCompanyModel.FK_Process_Order">
+      <End Role="Order" EntitySet="Orders" />
+      <End Role="Process" EntitySet="Processes" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="Email" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="Address" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="PhoneNumber" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+    <Property Name="CreatorId" Type="Int32" />
+    <Property Name="CompanyName" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="Note" Type="String" MaxLength="300" Unicode="true" FixedLength="false" />
+    <Property Name="DateCreater" Type="DateTime" Precision="3" />
+    <Property Name="ImageURL" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="Code" Type="String" MaxLength="10" Unicode="true" FixedLength="true" />
+    <Property Name="Invisible" Type="Boolean" />
+    <NavigationProperty Name="Staff" Relationship="DecalCompanyModel.FK_Customer_Staff" FromRole="Customer" ToRole="Staff" />
+    <NavigationProperty Name="Orders" Relationship="DecalCompanyModel.FK_Order_Customer" FromRole="Customer" ToRole="Order" />
+    <NavigationProperty Name="PayMents" Relationship="DecalCompanyModel.FK_PayMent_Customer" FromRole="Customer" ToRole="PayMent" />
+  </EntityType>
+  <EntityType Name="Module">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Invisible" Type="Boolean" />
+    <Property Name="Name" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="Permissions" Relationship="DecalCompanyModel.FK_Permission_Module" FromRole="Module" ToRole="Permission" />
+  </EntityType>
+  <EntityType Name="Order">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="CustomerId" Type="Int32" />
+    <Property Name="Note" Type="String" MaxLength="300" Unicode="true" FixedLength="false" />
+    <Property Name="DateInfo" Type="DateTime" Precision="3" />
+    <Property Name="State" Type="Int32" />
+    <Property Name="PayTimes" Type="Int32" />
+    <Property Name="CreaterId" Type="Int32" />
+    <Property Name="Invisible" Type="Boolean" />
+    <Property Name="Deadline" Type="DateTime" Precision="3" />
+    <Property Name="Name" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="TotalCash" Type="Double" />
+    <NavigationProperty Name="Customer" Relationship="DecalCompanyModel.FK_Order_Customer" FromRole="Order" ToRole="Customer" />
+    <NavigationProperty Name="Staff" Relationship="DecalCompanyModel.FK_Order_User" FromRole="Order" ToRole="Staff" />
+    <NavigationProperty Name="OrderDetails" Relationship="DecalCompanyModel.FK_OrderDetail_Order" FromRole="Order" ToRole="OrderDetail" />
+    <Property Type="DateTime" Name="DateStart" Precision="3" />
+    <NavigationProperty Name="Processes" Relationship="DecalCompanyModel.FK_Process_Order" FromRole="Order" ToRole="Process" />
+  </EntityType>
+  <EntityType Name="OrderDetail">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="ProductName" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="Quantity" Type="Int32" />
+    <Property Name="Price" Type="Double" />
+    <Property Name="OrderId" Type="Int32" />
+    <NavigationProperty Name="Order" Relationship="DecalCompanyModel.FK_OrderDetail_Order" FromRole="OrderDetail" ToRole="Order" />
+  </EntityType>
+  <EntityType Name="PayMent">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Cash" Type="Double" />
+    <Property Name="UserId" Type="Int32" Nullable="false" />
+    <Property Name="CustomerId" Type="Int32" />
+    <Property Name="ImageUrl" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="Invisible" Type="Boolean" />
+    <Property Name="DatePay" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Customer" Relationship="DecalCompanyModel.FK_PayMent_Customer" FromRole="PayMent" ToRole="Customer" />
+    <NavigationProperty Name="Staff" Relationship="DecalCompanyModel.FK_PayMent_Staff" FromRole="PayMent" ToRole="Staff" />
+  </EntityType>
+  <EntityType Name="Permission">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="ModuleId" Type="Int32" />
+    <NavigationProperty Name="Module" Relationship="DecalCompanyModel.FK_Permission_Module" FromRole="Permission" ToRole="Module" />
+    <NavigationProperty Name="Staff" Relationship="DecalCompanyModel.FK_Permission_User" FromRole="Permission" ToRole="Staff" />
+    <Property Type="Boolean" Name="Edit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Staff">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="StaffName" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="Email" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="PhoneNumber" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+    <Property Name="Note" Type="String" MaxLength="300" Unicode="true" FixedLength="false" />
+    <Property Name="Time" Type="DateTime" Precision="3" />
+    <Property Name="Password" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="CreaterId" Type="Int32" />
+    <Property Name="Invisible" Type="Boolean" />
+    <Property Name="ImageURL" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="Customers" Relationship="DecalCompanyModel.FK_Customer_Staff" FromRole="Staff" ToRole="Customer" />
+    <NavigationProperty Name="Orders" Relationship="DecalCompanyModel.FK_Order_User" FromRole="Staff" ToRole="Order" />
+    <NavigationProperty Name="PayMents" Relationship="DecalCompanyModel.FK_PayMent_Staff" FromRole="Staff" ToRole="PayMent" />
+    <NavigationProperty Name="Permissions" Relationship="DecalCompanyModel.FK_Permission_User" FromRole="Staff" ToRole="Permission" />
+    <NavigationProperty Name="Stores" Relationship="DecalCompanyModel.FK_Store_User" FromRole="Staff" ToRole="Store" />
+    <NavigationProperty Name="Tasks" Relationship="DecalCompanyModel.FK_Task_User" FromRole="Staff" ToRole="Task" />
+  </EntityType>
+  <EntityType Name="Store">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="ProductName" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="ProductPrice" Type="Double" />
+    <Property Name="SupplierName" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="Note" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="Time" Type="DateTime" Precision="3" />
+    <Property Name="CustomerId" Type="Int32" />
+    <Property Name="State" Type="Int32" />
+    <Property Name="InputQ" Type="Int32" />
+    <Property Name="OutputQ" Type="Int32" />
+    <Property Name="CurrentQ" Type="Int32" />
+    <Property Name="CreatorId" Type="Int32" />
+    <Property Name="Invisible" Type="Boolean" />
+    <Property Name="Category" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="Staff" Relationship="DecalCompanyModel.FK_Store_User" FromRole="Store" ToRole="Staff" />
+    <Property Type="Double" Name="TotalPrice" />
+    <Property Type="Int32" Name="Width" />
+    <Property Type="Int32" Name="Height" />
+    <Property Type="Int32" Name="Square" />
+  </EntityType>
+  <EntityType Name="Task">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Task1" Type="String" MaxLength="300" Unicode="true" FixedLength="false" />
+    <Property Name="DateTime" Type="DateTime" Precision="3" />
+    <Property Name="TimeComplete" Type="Int32" />
+    <Property Name="State" Type="Int32" />
+    <Property Name="Invisible" Type="Boolean" />
+    <Property Name="UserId" Type="Int32" />
+    <NavigationProperty Name="Staff" Relationship="DecalCompanyModel.FK_Task_User" FromRole="Task" ToRole="Staff" />
+  </EntityType>
+  <Association Name="FK_Customer_Staff">
+    <End Role="Staff" Type="DecalCompanyModel.Staff" Multiplicity="0..1" />
+    <End Role="Customer" Type="DecalCompanyModel.Customer" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Staff">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Customer">
+        <PropertyRef Name="CreatorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Order_Customer">
+    <End Role="Customer" Type="DecalCompanyModel.Customer" Multiplicity="0..1" />
+    <End Role="Order" Type="DecalCompanyModel.Order" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Order">
+        <PropertyRef Name="CustomerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PayMent_Customer">
+    <End Role="Customer" Type="DecalCompanyModel.Customer" Multiplicity="0..1" />
+    <End Role="PayMent" Type="DecalCompanyModel.PayMent" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="PayMent">
+        <PropertyRef Name="CustomerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Permission_Module">
+    <End Role="Module" Type="DecalCompanyModel.Module" Multiplicity="0..1" />
+    <End Role="Permission" Type="DecalCompanyModel.Permission" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Module">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Permission">
+        <PropertyRef Name="ModuleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Order_User">
+    <End Role="Staff" Type="DecalCompanyModel.Staff" Multiplicity="0..1" />
+    <End Role="Order" Type="DecalCompanyModel.Order" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Staff">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Order">
+        <PropertyRef Name="CreaterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_OrderDetail_Order">
+    <End Role="Order" Type="DecalCompanyModel.Order" Multiplicity="0..1" />
+    <End Role="OrderDetail" Type="DecalCompanyModel.OrderDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Order">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="OrderDetail">
+        <PropertyRef Name="OrderId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PayMent_Staff">
+    <End Role="Staff" Type="DecalCompanyModel.Staff" Multiplicity="1" />
+    <End Role="PayMent" Type="DecalCompanyModel.PayMent" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Staff">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="PayMent">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Permission_User">
+    <End Role="Staff" Type="DecalCompanyModel.Staff" Multiplicity="0..1" />
+    <End Role="Permission" Type="DecalCompanyModel.Permission" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Staff">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Permission">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Store_User">
+    <End Type="DecalCompanyModel.Staff" Multiplicity="0..1" Role="Staff" />
+    <End Type="DecalCompanyModel.Store" Multiplicity="*" Role="Store" />
+    <ReferentialConstraint>
+      <Principal Role="Staff">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Store">
+        <PropertyRef Name="CreatorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Task_User">
+    <End Role="Staff" Type="DecalCompanyModel.Staff" Multiplicity="0..1" />
+    <End Role="Task" Type="DecalCompanyModel.Task" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Staff">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Task">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Process">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="Int32" Name="OrderId" />
+    <Property Type="Int32" Name="OutPutQ" />
+    <Property Type="Int32" Name="Width" />
+    <Property Type="Int32" Name="Height" />
+    <Property Type="Int32" Name="Square" />
+    <Property Type="Int32" Name="Done" />
+    <Property Type="Int32" Name="Rest" />
+    <Property Type="Boolean" Name="IsDeleted" />
+    <NavigationProperty Name="Order" Relationship="DecalCompanyModel.FK_Process_Order" FromRole="Process" ToRole="Order" />
+  </EntityType>
+  <Association Name="FK_Process_Order">
+    <End Type="DecalCompanyModel.Order" Role="Order" Multiplicity="0..1" />
+    <End Type="DecalCompanyModel.Process" Role="Process" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Order">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Process">
+        <PropertyRef Name="OrderId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

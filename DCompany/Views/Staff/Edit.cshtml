@@ -1,0 +1,243 @@
+﻿@model DCompany.Models.Staff
+@using DCompany.Models
+@{
+    var list = (List<Permission>)ViewBag.ListRole;
+    var allow = ViewBag.AllowEdit;
+}
+@using (Html.BeginForm("Edit", "Staff", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.Password);
+    @Html.HiddenFor(model => model.Time);
+    <div class="container">
+        <ul class="breadcrumb ">
+            <li class="active">
+                <h4>Sửa thông tin nhân viên</h4>
+            </li>
+        </ul>
+    </div>
+    <div class="container content-panel">
+        <div class="row">
+            <div class="span12">
+                <div class="form-horizontal ">
+                    <div class="row">
+                        <div class="span6">
+                            <div class="control-group">
+                                <label class="control-label" for="CustomerName">Tên Nhân Viên</label>
+                                <div class="controls">
+                                    @if (Model.StaffName == "admin" || allow == false)
+                                    {  @Html.TextBoxFor(model => model.StaffName, new { @readonly = "readonly" })  }
+                                    else
+                                    { @Html.TextBoxFor(model => model.StaffName)} *
+                                    <div class="validate">@Html.ValidationMessageFor(model => model.StaffName)</div>
+
+                                </div>
+                            </div>
+                            <div class="control-group ">
+                                <label class="control-label" for="Email">Email</label>
+                                <div class="controls">
+                                    @Html.EditorFor(model => model.Email) *
+                 <div class="validate">@Html.ValidationMessageFor(model => model.Email)</div>
+                                </div>
+                            </div>
+                            <div class="control-group ">
+                                <label class="control-label" for="Email">Mật khẩu mới</label>
+                                <div class="controls">
+                                    @Html.PasswordFor(model => model.Password) *
+                 <div class="validate">@Html.ValidationMessageFor(model => model.Password)</div>
+                                </div>
+                            </div>
+                            <div class="control-group ">
+                                <label class="control-label" for="Phone">Số điện thoại</label>
+                                <div class="controls">
+                                    @Html.EditorFor(model => model.PhoneNumber) *
+           <div class="validate">@Html.ValidationMessageFor(model => model.PhoneNumber)</div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="Note">Ghi chú</label>
+                                <div class="controls">
+                                    @Html.TextAreaFor(model => model.Note)
+                                    <div class="validate">@Html.ValidationMessageFor(model => model.Note)</div>
+                                </div>
+                            </div>
+
+                            <div class="control-group" style="margin-left: 150px">
+                                <img src="/img/@Model.ImageURL"  width="200px" height="200px"/>
+                            </div>
+                            <div class="control-group ">
+                                <label class="control-label" for="Phone">Ảnh đại diện</label>
+                                <div class="controls">
+                                    <input type="file" name="fileImage" />
+                                </div>
+                                @Html.HiddenFor(model => model.ImageURL)
+                                <div class="validate">@Html.ValidationMessageFor(model => model.ImageURL)</div>
+                            </div>
+                        </div>
+                         @if (allow == true)
+                         { 
+                              <div class="span6" style="line-height: 30px">
+                            <ul class="breadcrumb ">
+                                <li class="active">
+                                    <h4>Quyền hạn của nhân viên</h4>
+                                </li>
+                            </ul>
+                            <table>
+                                   <tr>
+                                    <td></td>
+                                    <td><i class="icon-eye-open"></i></td>
+                                    <td><i class="icon-edit"></i></td>
+                                </tr>
+                                <tr>
+                                    <td>Quản lí khách hàng</td>
+
+                                    @if (list.Any(s => s.ModuleId == 1))
+                                    {
+                                        <td>
+                                            <input type="checkbox" name="customer" checked /></td>
+                                        if (list.Any(s => s.ModuleId == 1 && s.Edit == true))
+                                        {<td>
+                                    <input type="checkbox" name="customer_edit" checked /></td>}
+                                        else
+                                        {<td>
+                                    <input type="checkbox" name="customer_edit" /></td>}
+
+                                    }
+                                    else
+                                    {
+                                       <td><input type="checkbox" name="customer" /></td> 
+                                        <td><input type="checkbox" name="customer_edit" /></td>
+                                    }
+                                </tr>
+                                 <tr>
+                                    <td>Quản lí đơn hàng</td>
+
+                                    @if (list.Any(s => s.ModuleId == 2))
+                                    {
+                                        <td>
+                                            <input type="checkbox" name="order" checked /></td>
+                                        if (list.Any(s => s.ModuleId == 2 && s.Edit == true))
+                                        {<td>
+                                    <input type="checkbox" name="order_edit" checked /></td>}
+                                        else
+                                        {<td>
+                                    <input type="checkbox" name="order_edit" /></td>}
+
+                                    }
+                                    else
+                                    {
+                                       <td><input type="checkbox" name="order" /></td> 
+                                        <td><input type="checkbox" name="order_edit" /></td>
+                                    }
+                                </tr>
+                                 <tr>
+                                    <td>Quản lí thanh toán</td>
+
+                                    @if (list.Any(s => s.ModuleId == 3))
+                                    {
+                                        <td>
+                                            <input type="checkbox" name="finance" checked /></td>
+                                        if (list.Any(s => s.ModuleId == 3 && s.Edit == true))
+                                        {<td>
+                                    <input type="checkbox" name="finance_edit" checked /></td>}
+                                        else
+                                        {<td>
+                                    <input type="checkbox" name="finance_edit" /></td>}
+
+                                    }
+                                    else
+                                    {
+                                       <td><input type="checkbox" name="finance" /></td> 
+                                        <td><input type="checkbox" name="finance_edit" /></td>
+                                    }
+                                </tr>
+                                 <tr>
+                                    <td>Quản lí nhân viên</td>
+
+                                    @if (list.Any(s => s.ModuleId == 4))
+                                    {
+                                        <td>
+                                            <input type="checkbox" name="staffs" checked /></td>
+                                        if (list.Any(s => s.ModuleId == 4 && s.Edit == true))
+                                        {<td>
+                                    <input type="checkbox" name="staffs_edit" checked /></td>}
+                                        else
+                                        {<td>
+                                    <input type="checkbox" name="staffs_edit" /></td>}
+
+                                    }
+                                    else
+                                    {
+                                       <td><input type="checkbox" name="staffs" /></td> 
+                                        <td><input type="checkbox" name="staffs_edit" /></td>
+                                    }
+                                </tr>
+                                 <tr>
+                                    <td>Quản lí kho</td>
+
+                                    @if (list.Any(s => s.ModuleId == 5))
+                                    {
+                                        <td>
+                                            <input type="checkbox" name="store" checked /></td>
+                                        if (list.Any(s => s.ModuleId == 5 && s.Edit == true))
+                                        {<td>
+                                    <input type="checkbox" name="store_edit" checked /></td>}
+                                        else
+                                        {<td>
+                                    <input type="checkbox" name="store_edit" /></td>}
+
+                                    }
+                                    else
+                                    {
+                                       <td><input type="checkbox" name="store" /></td> 
+                                        <td><input type="checkbox" name="store_edit" /></td>
+                                    }
+                                </tr>
+                                 <tr>
+                                    <td>Quản lí tiến độ</td>
+
+                                    @if (list.Any(s => s.ModuleId == 6))
+                                    {
+                                        <td>
+                                            <input type="checkbox" name="process" checked /></td>
+                                        if (list.Any(s => s.ModuleId == 6 && s.Edit == true))
+                                        {<td>
+                                    <input type="checkbox" name="process_edit" checked /></td>}
+                                        else
+                                        {<td>
+                                    <input type="checkbox" name="process_edit" /></td>}
+
+                                    }
+                                    else
+                                    {
+                                       <td><input type="checkbox" name="process" /></td> 
+                                        <td><input type="checkbox" name="process_edit" /></td>
+                                    }
+                                </tr>
+                            </table>
+                        </div>
+                         }
+                   
+
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button class="btn btn-primary" type="submit">Lưu</button>
+                            <div class="btn" onclick="backToDashBoard()">Quay lại</div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script>
+    function backToDashBoard() {
+        location.href = '/Staff';
+    }
+</script>
+
+
+

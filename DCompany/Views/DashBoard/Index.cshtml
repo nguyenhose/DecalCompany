@@ -1,0 +1,168 @@
+﻿@model List<DCompany.Models.Staff>
+@using DCompany.Models;
+@{
+    ViewBag.Title = "Index";
+
+    List<Task> myTask = ViewBag.myTask;
+    List<Task> otherTask = ViewBag.otherTask;
+    int stt = 0; 
+}
+<div class="container">
+    <ul class="breadcrumb ">
+        <li class="active">
+            <h4>Công việc ngày @DateTime.Now.ToString("dd/MM/yyyy")</h4>
+        </li>
+    </ul>
+</div>
+
+    <div class="container content-panel">
+        @{
+            <div class="span6">
+                <div style="margin: 10px;">
+                    <button class="btn btn-info" onclick="createBtn()"><i class="icon-plus icon-white"></i>Thêm công việc</button>
+                </div>
+                <hr />
+
+                @if (myTask.Count > 0)
+                {  
+                    <table>
+                        <tr>
+                            <td style="width: 30px"><i class="icon-check"></i></td>
+                            <td style="width: 200px"><b>Công việc</b></td>
+                            <td><b>Thời lượng</b></td>
+                        </tr>
+                        @foreach (var item in myTask)
+                        { 
+                            <tr>
+                                <td>
+                                    @if (item.State == 1)
+                                    {  <input type="checkbox" id="@item.Id" class="box" checked /> }
+                                    @if (item.State == 0)
+                                    {  <input type="checkbox" id="@item.Id" class="box" class="attr" /> }
+                                </td>
+                                <td style="border-bottom: solid 1px #ddd; padding: 5px">@item.Task1   </td>
+                                <td style="border-bottom: solid 1px #ddd; padding: 5px; text-align: center">@item.TimeComplete (h)</td>
+                            </tr>
+                        }
+                        <tr>
+                            <td colspan="3" style="text-align: right; padding: 5px">
+                                <button class="btn btn-success" onclick="confirm()" id="idm">Xác nhận</button>
+                            </td>
+                        </tr>
+                    </table>
+                }
+                else
+                {
+                    <div style="text-align: center">Chưa có công việc</div>
+                }
+            </div>
+        }
+        @{
+            <div class="span4">
+                <h4>Nhân viên khác</h4>
+                <table class="table">
+                    @foreach (var item in Model)
+                    {
+                        stt++;
+                        var listTask = otherTask.Where(s => s.UserId == item.Id).ToList();
+                        <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="myModal-@stt" style="width:450px;padding:20px">
+                            <div class="modal-dialog modal-sm">
+                                <div class="modal-content">
+                                    <div>
+                                        <div>
+                                            <div style="display: inline-block">
+                                                <div style="width: 50px;">
+                                                    <img src="/img/@item.ImageURL" style="border-radius:40px; width:40px;height:40px">
+                                                </div>
+                                            </div>
+                                            <div style="display: inline-block; text-transform: uppercase">@item.StaffName</div>
+                                        </div>
+                                        <hr />
+                                        <div>
+                                            <div style="width: 30px; display: inline-block"><i class="icon-check"></i></div>
+                                            <div style="width: 300px; display: inline-block"><b>Công việc</b></div>
+                                            <div style="display: inline-block; width: 80px"><b>Thời lượng</b></div>
+                                        </div>
+                                        @foreach (var task in listTask)
+                                        {
+                                            <div>
+                                                <div style="display: inline-block">
+                                                    @if (@task.State == 1)
+                                                    {  <input type="checkbox" checked disabled /> }
+                                                    @if (task.State == 0)
+                                                    {  <input type="checkbox" disabled /> }
+                                                </div>
+                                                <div style="display: inline-block; padding: 5px; border-bottom: 1px solid #ddd; width: 300px">@task.Task1</div>
+                                                <div style="display: inline-block; border-bottom: 1px solid #ddd; padding: 5px; text-align: center; width: 80px">@task.TimeComplete (h)</div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <tr>
+                            <td style="width: 50px">
+                                <div>
+                                    <img src="/img/@item.ImageURL"   style="border-radius:40px; width:40px;height:40px">
+                                </div>
+                            </td>
+                            <td>
+                                @item.StaffName
+                            </td>
+                            <td>
+                                @if (listTask.Count > 0)
+                                {  <button class="btn btn-default" data-toggle="modal" data-target="#myModal-@stt">Xem <i class="icon-chevron-right"></i></button>}
+                                else
+                                {
+                                    <button class="btn-link" data-toggle="modal" disabled style="color: #ccc">Chưa tạo</button>}
+
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>  
+        }
+    </div>
+
+
+<script type="text/javascript">
+    function createBtn() {
+        window.location.href = "/Task";
+    }
+
+    function confirm() {
+        var listId = "";
+        var getId = ""
+        var list = $(".box");
+        var all = "";
+        for (var i = 0; i < list.length ; i++) {
+            if ($(list[i]).prop('checked')) {
+                getId = $(list[i]).attr('id');
+                listId = getId + ' ' + listId;
+            }
+            getId = $(list[i]).attr('id');
+            all = getId + ' ' + all;
+        }
+        $.ajax({
+            url: "/Task/ConfirmTask",
+            type: "GET",
+            data: { list: listId, allList: all },
+            success: function (data) {
+                var mes = parseInt(data);
+                if (mes > 0) {
+                    alert("Bạn vừa hoàn thành xong " + mes + " công việc!");
+                }
+
+                location.reload();
+            }
+        });
+    }
+    $('.checkbox').click(function () {
+        var thisCheck = $(this);
+        if (thischeck.is(':checked')) {
+            $("#idm").removeAttr("disable");
+        }
+    });
+
+
+</script>

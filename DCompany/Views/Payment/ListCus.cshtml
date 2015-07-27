@@ -1,0 +1,36 @@
+﻿@model List<DCompany.Models.Customer>
+@{
+    ViewBag.Title = "ListCus";
+    
+}
+
+<div>
+
+    @{
+        if (Model != null)
+        {   
+            if( Model.Count > 0){
+            <table class="table">
+            <th></th>
+            <th>Tên khách hàng</th>
+            <th>Thông tin khách hàng</th>
+                        @foreach (var item in Model)
+                        {
+                    <tr>
+                        <td rowspan="3"><input type="radio" name="nameCus" value="@item.Id"/></td>
+                        <td rowspan="3">  <a href="/Customer/Details/@item.Id"> @item.Name</a></td>
+                    </tr>
+                    <tr>
+                        <td>Email: @item.Email</td>
+                    </tr>
+                <tr> <td>SDT: @item.PhoneNumber</td></tr>
+             
+       
+                        }
+               </table>
+    }    else {<div>Không tìm thấy khách hàng</div>}
+        }
+    
+    }
+    
+</div>

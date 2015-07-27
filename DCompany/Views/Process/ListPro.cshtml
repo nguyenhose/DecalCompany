@@ -1,0 +1,139 @@
+﻿ @using MvcPaging
+@model IPagedList<DCompany.Models.Process>
+@using DCompany.Models;
+<table border="1" style="color: Black; background-color: White; border-color: #999999; border-width: 1px; border-style: Solid; width: 100%; border-collapse: collapse;">
+        <tr style="color: White; background-color: Black; font-weight: bold;">
+            <th>Đơn hàng</th>
+            <th>Xuất kho</th>
+            <th>Kết quả</th>
+            <th>Giao hàng</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <table class="table">
+                        <tr>
+                            <td>Tên đơn hàng</td>
+                            <td>@item.Order.Name</td>
+                        </tr>
+                        <tr>
+                            <td>Ngày giao</td>
+                            <td>@item.Order.Deadline.Value.ToString("dd/MM/yyyy")</td>
+                        </tr>
+                        <tr>
+                            <td>Khách hàng</td>
+                            <td>@item.Order.Customer.Name</td>
+                        </tr>
+                        <tr>
+                            <td>Số điện thoại</td>
+                            <td>@item.Order.Customer.PhoneNumber</td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                    <table class="table">
+                        <tr>
+                            <td>Số lượng: </td>
+                            <td>
+                                @if (@item.OutPutQ == null)
+                                { <div>0 tờ</div> }
+                                @item.OutPutQ Tờ (@item.Height x @item.Width)
+                    
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Diện tích</td>
+                            <td>
+                                @item.Square (  m&sup2)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>@if (ViewBag.AllowEditEx == true)
+                                { 
+                                <div class="btn" onclick="ExportQ(@item.Id)">Xuất kho</div>
+                                }</td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                    <table class="table">
+                        <tr>
+                            <td>Thành phẩm :</td>
+                            <td>
+                                @if (@item.Done == null)
+                                { }
+                                @if (ViewBag.AllowEditPr == true)
+                                {  
+                                    <input id="done_@item.Id" value="@item.Done" style="width:50px"/> }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Bị lỗi :</td>
+                            <td>@if (@item.Rest == null)
+                                { }
+                                @if (ViewBag.AllowEditPr == true)
+                                {
+                                    <input id="undone_@item.Id" value="@item.Rest" style="width:50px"/>}</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="btn" onclick="Done(@item.Id)">Lưu</div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                    <table class="table">
+
+                        <tr>
+                            <td>
+                                @{
+                                if (ViewBag.AllowEditPr == true)
+                                {
+                                    if (item.IsDeleted == true)
+                                    { <input type="checkbox" checked onclick="checkIt(this)" value="@item.Id"/> }
+                                    else
+                                    {<input type="checkbox" onclick="checkIt(this) " value="@item.Id"/> }
+                                }
+                                else
+                                {
+                                    if (item.IsDeleted == true)
+                                    { <input type="checkbox" checked disabled /> }
+                                    else
+                                    {<input type="checkbox" disabled /> }
+                                }
+                                }
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        }
+
+
+    </table>
+   <div class="pager1">
+    @Html.Raw(Ajax.Pager(
+            new Options
+            {
+                PageSize = Model.PageSize,
+                TotalItemCount = Model.TotalItemCount,
+                CurrentPage = Model.PageNumber,
+                ItemTexts = new ItemTexts() { Next = "Next", Previous = "Previous", Page = "P" },
+                ItemIcon = new ItemIcon() { First = "icon-backward", Previous = "icon-chevron-left", Next = "icon-chevron-right", Last = "icon-forward" },
+                TooltipTitles = new TooltipTitles() { Next = "Next page", Previous = "Previous page", Page = "Page {0}." },
+                Size = Size.normal,
+                Alignment = Alignment.centered,
+                IsShowControls = true,
+                IsShowFirstLast = true,
+                CssClass = ""
+            },
+            new AjaxOptions
+            {
+                UpdateTargetId = "grid-list",
+                OnBegin = "beginPaging",
+                OnSuccess = "successPaging",
+                OnFailure = "failurePaging"
+            }, new { controller = "Process", action = "Index", employee_name = ViewData["employee_name"]  }))
+      </div>

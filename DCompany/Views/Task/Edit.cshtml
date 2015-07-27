@@ -1,0 +1,83 @@
+﻿@model DCompany.Models.Task
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<div class="container">
+    <ul class="breadcrumb ">
+        <li class="active">
+            <h4>Công việc</h4>
+        </li>
+    </ul>
+</div>
+<input id="ID" value="@Model.Id" type="hidden"/>                      
+<div class="container content-panel">
+    <div class="row">
+        <div class="span12">
+            <div class="form-horizontal ">
+                <div class="row">
+                    <div class="span6">
+                        <div class="control-group">
+                            <label class="control-label" for="Task">Ngày</label>
+                            <div class="controls">
+                                <input type="text" value="@DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")" readonly id="date"/>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="Task">Công việc</label>
+                            <div class="controls">
+                                @Html.TextAreaFor(s => s.Task1, new { id="work"})*
+                            </div>
+                              <div class="controls">  <div  style="display:none" id="task">Xin nhập số kí tự nhiều hơn 10! </div></div>
+                        </div>
+                        <div class="control-group ">
+                            <label class="control-label" for="Hour">Thời gian hoàn thành</label>
+                            <div class="controls">
+                                @Html.EditorFor(s => s.TimeComplete, new { id = "TimeComplete"})*Giờ
+                            </div>
+                                  <div class="controls"><div  style="display:none" id="time">Xin nhập thời gian bằng <u>số nhỏ hơn 8</u> cho công việc!</div></div>
+                        </div>
+                        <div class="control-group">
+                            <div class="controls">
+                                <button class="btn btn-primary" onclick="CreateTask()">Lưu</button>
+                                <button class="btn" onclick="backToDashBoard()">Quay lại</button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function CreateTask() {
+        $("#task").attr("style", "display:none");
+        $("#time").attr("style", "display:none");
+        var ID = $("#ID").val();
+        var date = $("#date").val();
+        var work = $("#work").val();
+        var timeComplete = $("#TimeComplete").val();
+        if (parseInt(timeComplete) && work.length > 20) {
+            $.ajax({
+                url: "/Task/EditNew",
+                type: "GET",
+                data: { Date: date, Work: work, TimeComplete: timeComplete ,id: ID},
+                success: function (data) {
+                    location.href = '/Task';
+                }
+            });
+        }
+        else {
+            if (!parseInt(timeComplete) || parseInt(timeComplete) > 8) { $("#time").attr("style", "display:normal;color:red") }
+            else { $("#time").attr("style", "display:none"); }
+            if (work.length < 10) { $("#task").attr("style", "display:normal;color:red") } else { $("#task").attr("style", "display:none"); }
+        }
+
+    }
+    function backToDashBoard() {
+        location.href = '/Task';
+    }
+
+</script>

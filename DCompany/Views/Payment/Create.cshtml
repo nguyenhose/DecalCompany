@@ -1,0 +1,142 @@
+﻿@model DCompany.Models.PayMent
+@{
+    ViewBag.Title = "Create";
+    
+}
+
+    @using (Html.BeginForm("Create", "Payment", FormMethod.Post, new { enctype = "multipart/form-data", onsubmit = "modify();" }))
+    { 
+        @Html.HiddenFor(s=>s.CustomerId)
+    <div class="container">
+        <ul class="breadcrumb ">
+            <li class="active">
+                <h4>Thanh toán</h4>
+            </li>
+        </ul>
+    </div>
+        <div class="container content-panel">
+           
+        <div class="row">
+            <div class="span12">
+                <div class="form-horizontal ">
+                    <div class="row">
+                        <div class="span6">
+                         <div class="control-group ">
+                                <label class="control-label" for="Email">Tìm khách hàng</label>
+                                <div class="controls">
+                                       <div class="input-append">
+        <input class="span3" id="any" placeholder="Xin nhập tên, sdt, code hoặc email..." type="text">
+        <div class="btn" onclick="Search()">
+            <i class="icon-search"></i>&nbsp;Tìm</div>
+    </div>
+                                    
+                                </div>
+                             @if (TempData["a"] != null) {<div class="controls" style="color:red">Xin nhập dữ liệu để tìm và chọn khách hàng</div> }
+   
+                             </div>
+                               <div class="control-group ">
+                                <label class="control-label" for="Email">Số tiền thanh toán</label>
+                                <div class="controls">
+                                    @Html.TextBoxFor(model => Model.Cash, new { id = "cash", @class = "currency", type = "text" }) *
+                                    <div class="validate">  @Html.ValidationMessageFor(model => model.Cash)</div>
+                                  
+                                </div>
+                            </div>
+                               <div class="control-group">
+                                <label class="control-label" for="Note">Ảnh Hóa đơn</label>
+                              <div class="controls">
+                                   @Html.TextBoxFor(model => model.ImageUrl, new { type = "file",multiple = "single",id="img1"})
+                                  <div class="validate">  @Html.ValidationMessageFor(model => model.ImageUrl)</div>
+                                  
+                                </div>
+                            </div>
+                              <div class="control-group">
+                        <div class="controls">
+                           <button type="submit" class="btn btn-info">Lưu</button>
+                          <div class="btn" onclick="backToDashBoard()">Quay lại</div>
+
+                        </div>
+                    </div>   
+                            </div>
+                           <div class="span6">
+                                 <div id="cus">
+                                      @Html.Partial("ListCus")
+                                    </div>
+                        </div>
+                      
+                    </div>
+                </div>
+            </div>
+                    </div>
+        </div>
+    
+}
+
+ <script>
+     function Search() {
+         var value = $("#any").val();
+         if (value != "") {
+             $.ajax({
+                 url: "/Payment/Search",
+                 type: "GET",
+                 data: { ID: value },
+                 success: function (data) {
+                     $("#cus").html(data)
+                 }
+             });
+         }
+        
+     }
+     function backToDashBoard() {
+         location.href = '/Payment';
+     }
+     $(function () {
+         $('#datetimepicker1').datetimepicker({
+             language: 'pt-BR'
+         });
+     });
+     $(function () {
+         // jQuery formatCurrency plugin: http://plugins.jquery.com/project/formatCurrency
+
+         // Format while typing & warn on decimals entered, 2 decimal places
+         $('#cash').blur(function () {
+             $('#cash').html(null);
+             $(this).formatCurrency({ colorize: true, negativeFormat: '-%s%n', roundToDecimalPlace: 0 });
+         })
+         .keyup(function (e) {
+             var e = window.event || e;
+             var keyUnicode = e.charCode || e.keyCode;
+             if (e !== undefined) {
+                 switch (keyUnicode) {
+                     case 16: break; // Shift
+                     case 17: break; // Ctrl
+                     case 18: break; // Alt
+                     case 27: this.value = ''; break; // Esc: clear entry
+                     case 35: break; // End
+                     case 36: break; // Home
+                     case 37: break; // cursor left
+                     case 38: break; // cursor up
+                     case 39: break; // cursor right
+                     case 40: break; // cursor down
+                     case 78: break; // N (Opera 9.63+ maps the "." from the number key section to the "N" key too!) (See: http://unixpapa.com/js/key.html search for ". Del")
+                     case 110: break; // . number block (Opera 9.63+ maps the "." from the number block to the "N" key (78) !!!)
+                     case 190: break; // .
+                     default: $(this).formatCurrency({ colorize: true, negativeFormat: '-%s%n', roundToDecimalPlace: -1, eventOnDecimalsEntered: true });
+                 }
+             }
+         })
+         .bind('decimalsEntered', function (e, cents) {
+             if (String(cents).length > 2) {
+                 var errorMsg = 'Please do not enter any cents (0.' + cents + ')';
+                 $('#cash').html(errorMsg);
+                 log('Event on decimals entered: ' + errorMsg);
+             }
+         });
+     });
+     function modify() {
+         var input = $("#cash").val();
+         input = input.replace(',', '');
+         $("#cash").val(input);
+
+     }
+  </script>

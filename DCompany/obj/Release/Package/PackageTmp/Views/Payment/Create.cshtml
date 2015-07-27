@@ -1,0 +1,97 @@
+﻿@model DCompany.Models.PayMent
+@{
+    ViewBag.Title = "Create";
+    
+}
+
+    @using (Html.BeginForm("Create", "Payment", FormMethod.Post, new { enctype = "multipart/form-data" })) { 
+        @Html.HiddenFor(s=>s.CustomerId)
+    <div class="container">
+        <ul class="breadcrumb ">
+            <li class="active">
+                <h4>Thanh toán</h4>
+            </li>
+        </ul>
+    </div>
+        <div class="container content-panel">
+           
+        <div class="row">
+            <div class="span12">
+                <div class="form-horizontal ">
+                    <div class="row">
+                        <div class="span6">
+                         <div class="control-group ">
+                                <label class="control-label" for="Email">Tìm khách hàng</label>
+                                <div class="controls">
+                                       <div class="input-append">
+        <input class="span3" id="any" placeholder="Xin nhập tên, sdt, code hoặc email..." type="text">
+        <div class="btn" onclick="Search()">
+            <i class="icon-search"></i>&nbsp;Tìm</div>
+    </div>
+                                    
+                                </div>
+                             @if (TempData["a"] != null) {<div class="controls" style="color:red">Xin nhập dữ liệu để tìm và chọn khách hàng</div> }
+   
+                             </div>
+                               <div class="control-group ">
+                                <label class="control-label" for="Email">Số tiền thanh toán</label>
+                                <div class="controls">
+                                    @Html.EditorFor(model => model.Cash) *
+                                    <div class="validate">  @Html.ValidationMessageFor(model => model.Cash)</div>
+                                  
+                                </div>
+                            </div>
+                               <div class="control-group">
+                                <label class="control-label" for="Note">Ảnh Hóa đơn</label>
+                              <div class="controls">
+                                   @Html.TextBoxFor(model => model.ImageUrl, new { type = "file",multiple = "single",id="img1"})
+                                  <div class="validate">  @Html.ValidationMessageFor(model => model.ImageUrl)</div>
+                                  
+                                </div>
+                            </div>
+                              <div class="control-group">
+                        <div class="controls">
+                           <button type="submit" class="btn btn-info">Lưu</button>
+                          <div class="btn" onclick="backToDashBoard()">Quay lại</div>
+
+                        </div>
+                    </div>   
+                            </div>
+                           <div class="span6">
+                                 <div id="cus">
+                                      @Html.Partial("ListCus")
+                                    </div>
+                        </div>
+                      
+                    </div>
+                </div>
+            </div>
+                    </div>
+        </div>
+    
+}
+
+ <script>
+     function Search() {
+         var value = $("#any").val();
+         if (value != "") {
+             $.ajax({
+                 url: "/Payment/Search",
+                 type: "GET",
+                 data: { ID: value },
+                 success: function (data) {
+                     $("#cus").html(data)
+                 }
+             });
+         }
+        
+     }
+     function backToDashBoard() {
+         location.href = '/Payment';
+     }
+     $(function () {
+         $('#datetimepicker1').datetimepicker({
+             language: 'pt-BR'
+         });
+     });
+  </script>

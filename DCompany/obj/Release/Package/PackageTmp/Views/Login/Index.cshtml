@@ -1,0 +1,44 @@
+﻿@model DCompany.Models.Staff
+
+@{
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+    }
+@using (Html.BeginForm()) {
+    <div class="container">
+        <ul class="breadcrumb ">
+            <li class="active">
+                <h4>Đăng nhập</h4>
+            </li>
+        </ul>
+    </div>
+ <div class="container content-panel">
+        <div class="row">
+            <div class="span12">
+                <div class="form-horizontal ">
+                    <div class="row">
+                        <div class="span6">
+                            <div class="control-group">
+                                <label class="control-label" for="CustomerName">Tên nhân viên</label>
+                                <div class="controls">
+                                    @Html.EditorFor(model => model.StaffName) 
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="CustomerName">Mật khẩu</label>
+                                <div class="controls">
+                                    @Html.PasswordFor(model => model.Password) 
+              
+                                </div>
+                            </div>
+                            <div class="control-group">
+                        <div class="controls">
+                           <button type="submit" class="btn btn-info">Đăng nhập</button>
+                        </div>
+                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+}

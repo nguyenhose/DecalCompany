@@ -1,0 +1,50 @@
+﻿@model DCompany.Models.Task
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Task</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Task1)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Task1)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.DateTime)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.DateTime)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.TimeComplete)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.TimeComplete)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.State)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.State)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Staff.StaffName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Staff.StaffName)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

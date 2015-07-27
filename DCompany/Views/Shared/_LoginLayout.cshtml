@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Tân Hoàng Đăng System</title>
+        <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+        <meta name="viewport" content="width=device-width" />
+        <link href="~/Css/bootstrap.css" rel="stylesheet" />
+        <link href="~/Css/bootstrap-responsive.css" rel="stylesheet" />
+        <link href="~/Css/special.css" rel="stylesheet" />
+    </head>
+    <body>
+    <div class="navbar navbar-static-top navbar-inverse" style="margin-bottom:20px">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".subnav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="#">Tân Hoàng Đăng</a>
+                    <!-- /.nav-collapse -->
+                </div>
+            </div>
+            <!-- /navbar-inner -->
+        </div>
+        <div id="body">
+            @RenderSection("featured", required: false)
+            <section class="content-wrapper main-content clear-fix">
+                @RenderBody()
+            </section>
+        </div>
+      
+
+     
+    </body>
+<script src="~/Js/jquery.min.js"></script>
+<script src="~/Js/bootstrap.min.js"></script>
+<script src="~/Js/jquery-ui.min.js"></script>
+
+</html>

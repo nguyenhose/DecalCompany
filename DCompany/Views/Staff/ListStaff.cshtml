@@ -1,0 +1,135 @@
+﻿@using MvcPaging
+@model IPagedList<DCompany.Models.Staff>
+@{
+    var listTask = (List<DCompany.Models.Task>)ViewBag.listStaff;
+    var allowEdit = ViewBag.AllowEdit;
+}
+
+<table border="1" style="color: Black; background-color: White; border-color: #999999; border-width: 1px; border-style: Solid; width: 100%; border-collapse: collapse;">
+
+    <tr style="color: White; background-color: Black; font-weight: bold;">
+        <th>Avatar</th>
+        <th style="width: 30%">Nhân viên
+        </th>
+        <th>Công việc trong ngày
+        </th>
+        @if (allowEdit == true)
+        {
+            <th style="width: 75px"></th>
+            <th style="width: 75px"></th>}
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td style="text-align: center">
+                <img src="/img/@item.ImageURL" style="width:100px;border-radius: 50px 50px;height: 100px;"/></td>
+            <td>
+                <table class="table">
+                    <tr>
+                        <td>Họ tên:</td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StaffName)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Email:</td>
+                        <td>
+                            @item.Email
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Sdt:</td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PhoneNumber)
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <div style="overflow-x: auto">
+                    @{
+        var listperStaff = listTask.Where(s => s.UserId == item.Id).OrderByDescending(s => s.DateTime);
+        if (listperStaff != null)
+        {
+                        <table class="table">
+                            @foreach (var item2 in listperStaff)
+                            { 
+                                <tr>
+                                    <td>
+                                        @if (item2.State == 1)
+                                        { <input type="checkbox" disabled checked />}
+                                        @if (item2.State == 0)
+                                        {  <input type="checkbox" disabled />}
+                                    </td>
+                                    <td>@item2.Task1 </td>
+                                    <td>@item2.TimeComplete (h) </td>
+
+                                </tr>
+                          
+                            }
+                        </table>
+        }
+                    }
+                </div>
+
+            </td>
+            @if (allowEdit == true)
+            {
+                <td>
+                    <div class="btn btn-info" onclick="edit(@item.Id)"><i class="icon-edit icon-white"></i>Sửa </div>
+                </td>
+
+                <td>
+                    <div onclick="deleteConfirm(@item.Id)" class="btn btn-danger">
+                        <i class="icon-trash icon-white"></i>
+                        Xóa
+                    </div>
+                </td>}
+        </tr>
+    }
+</table>
+<div class="pager1">
+    @Html.Raw(Ajax.Pager(
+            new Options
+            {
+                PageSize = Model.PageSize,
+                TotalItemCount = Model.TotalItemCount,
+                CurrentPage = Model.PageNumber,
+                ItemTexts = new ItemTexts() { Next = "Next", Previous = "Previous", Page = "P" },
+                ItemIcon = new ItemIcon() { First = "icon-backward", Previous = "icon-chevron-left", Next = "icon-chevron-right", Last = "icon-forward" },
+                TooltipTitles = new TooltipTitles() { Next = "Next page", Previous = "Previous page", Page = "Page {0}." },
+                Size = Size.normal,
+                Alignment = Alignment.centered,
+                IsShowControls = true,
+                IsShowFirstLast = true,
+                CssClass = ""
+            },
+            new AjaxOptions
+            {
+                UpdateTargetId = "grid-list",
+                OnBegin = "beginPaging",
+                OnSuccess = "successPaging",
+                OnFailure = "failurePaging"
+            }, new { controller = "Staff", action = "Index", employee_name = ViewData["employee_name"] }))
+</div>
+<script>
+    function deleteConfirm(id) {
+        var ok = confirm("Bạn có chắc chắn xóa ?");
+        if (ok) {
+            $.ajax({
+                url: "/Staff/DeleteConfirmed",
+                type: "GET",
+                data: { Id: id },
+                success: function (data) {
+                    location.reload();
+                }
+            });
+        }
+
+
+    }
+    function edit(id) {
+        window.location = "Staff/Edit/" + id;
+    }
+</script>

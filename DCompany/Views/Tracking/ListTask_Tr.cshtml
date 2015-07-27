@@ -1,0 +1,65 @@
+﻿@{
+    @model List<DCompany.Models.Task>
+    Layout = null;
+}
+
+
+
+
+
+<div class="form-horizontal">
+    <div class="row">
+        @if (Model != null)
+        {
+            var list = Model.Select(s => s.Staff).ToList().Distinct();
+            <div class="span2">
+                <h4>Theo nhân viên</h4>
+                @foreach (var name in list)
+                {
+                    <div class="nameStaff" onclick="Filter(@name.Id)">
+                        @name.StaffName
+                    </div>
+               
+                }
+            </div>
+            <div class="span10">
+                <table class="table" id="daica">
+                    <th>Tên</th>
+                    <th>Công việc</th>
+                    <th>Thời gian làm việc</th>
+                    <th>Giờ làm việc</th>
+                    @foreach (var item in Model)
+                    { 
+                        <tr class="@item.Staff.Id">
+                            <td>
+                                @item.Staff.StaffName
+                            </td>
+
+                            @if (item.Invisible == true)
+                            {  <td style="color: red">@item.Task1
+                            </td>}
+                            else
+                            {<td>@item.Task1
+                </td>}
+
+                            <td>
+                                @item.DateTime.Value.ToString("dd/MM/yyyy HH:mm")
+                            </td>
+                            <td>
+                                @item.TimeComplete (h)
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+            
+        }
+    </div>
+</div>
+<script>
+    function Filter(id) {
+        $('#daica tr:not(.' + id + ')').hide();
+        $('.' + id).show();
+    }
+</script>
+

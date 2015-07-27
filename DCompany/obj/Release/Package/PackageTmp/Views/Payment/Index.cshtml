@@ -1,0 +1,85 @@
+﻿@model IEnumerable<DCompany.Models.PayMent>
+
+@{
+    ViewBag.Title = "Index";
+    MvcPaging.IPagedList<DCompany.Models.PayMent> oldPayment = (MvcPaging.IPagedList<DCompany.Models.PayMent>)ViewBag.Payment;
+}
+
+
+<div class="container">
+  <ul class="breadcrumb ">
+    <li class="active">
+      <h4>Công nợ</h4>
+    </li>
+  </ul>
+</div>
+@using (Ajax.BeginForm("Index", "Payment",
+                            new AjaxOptions { UpdateTargetId = "grid-list", HttpMethod = "get", LoadingElementId = "loading", OnBegin = "beginPaging", OnSuccess = "successPaging", OnFailure = "failurePaging" },
+                            new { id = "frm-search" }))
+{ 
+    <div class="container content-panel">
+        <div class="span4">
+          <div class="input-append">
+        <input class="span3" id="any" placeholder="Xin nhập tên, sdt, code hoặc email..." type="text">
+        <div class="btn" onclick="Search()">
+            <i class="icon-search"></i>&nbsp;Tìm</div>
+    </div>
+        
+        </div>
+
+    <div class="span4">
+        <div id="cus">
+            @Html.Partial("ListCus")
+        </div>
+    </div>
+  </div>
+    <hr />
+<div class="container content-panel">
+        <div id="datetimepicker1" class="input-append date">
+                <input type="text" name="date" readonly placeholder="Từ ngày.." />
+                <span class="add-on">
+                    <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                </span>
+            <button class="btn btn-info"  style="margin-left:10px">Lọc</button> 
+            </div>
+          
+    <div id="grid-list">
+          @{ Html.RenderPartial("ListPayment", oldPayment);}
+    </div>
+</div>
+}
+
+<script>
+    function beginPaging(args) {
+        // Animate
+        $('#grid-list').fadeOut('normal');
+    }
+    function successPaging() {
+        // Animate
+        $('#grid-list').fadeIn('normal');
+
+    }
+    function failurePaging() {
+
+    }
+    function Search() {
+        var days = $("#text").val();
+        var value = $("#any").val();
+        if (value != "") {
+            $.ajax({
+                url: "/Payment/Search",
+                type: "GET",
+                data: { ID: value, Day : days},
+                success: function (data) {
+                    $("#cus").html(data)
+                }
+            });
+        }
+
+    }
+    $(function () {
+        $('#datetimepicker1').datetimepicker({
+            language: 'pt-BR'
+        });
+    });
+</script>

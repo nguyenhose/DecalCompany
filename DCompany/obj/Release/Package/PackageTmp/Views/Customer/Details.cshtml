@@ -1,0 +1,106 @@
+﻿@model DCompany.Models.Customer
+@using DCompany.Models
+@{
+    ViewBag.Title = "Details";
+    var loan = (Double)ViewBag.loan;
+    var listorder = (List<Order>)ViewBag.Order;
+}
+<div class="container">
+  <ul class="breadcrumb ">
+    <li class="active">
+      <h4>Thông tin khách hàng</h4>
+    </li>
+  </ul>
+</div>
+<div class="container content-panel">
+    <div class="row">
+        <div class="span12">
+            <div class="form-horizontal ">
+                <div class="row">
+                    <div class="span6">
+                        <div class="control-group">
+                            <table class="table">
+                                <tr>
+                                      <th>Tên</th>
+                                    <td>@Model.Name</td>
+                                </tr>
+                                <tr>
+                                      <th>Số điện thoại</th>
+                                    <td>@Model.PhoneNumber</td>
+                                </tr>
+                                <tr>
+                                       <th>Email</th>
+                                    <td>@Model.Email</td>
+                                </tr>
+                                <tr>
+                                       <th>Ghi chú</th>
+                                    <td>@Model.Note</td>
+                                </tr>
+                                <tr>
+                                      <th>Ngày tạo</th>
+                                    <td>@Model.DateCreater</td>
+                                </tr>
+                                   <tr>
+                                      <th>Tình trạng</th>
+                                    <td>@if (Model.Invisible == false) { <div style="color:green">Đang hoạt động</div> }
+                                        else{ <div style="color:red">Đã khóa tài khoản</div>}
+                                    </td>
+                                </tr>
+                                  <tr>
+                                      <td> <div  class="money"style="margin-top:10px;">Tiền nợ :  @{
+     var tranloan = String.Format(System.Globalization.CultureInfo.CreateSpecificCulture("vi-VN"), "{0:C}", loan);
+     tranloan = tranloan.Substring(0, tranloan.LastIndexOf(','));
+     @tranloan
+     } đ</div></td>
+                                  </tr>
+                            </table>
+                        </div>
+                    </div>
+                  
+                </div>
+            </div>
+        </div>
+    </div>
+       </div>
+<hr />
+<div class="container">
+  <ul class="breadcrumb ">
+    <li class="active">
+      <h4>Các đơn hàng</h4>
+    </li>
+  </ul>
+</div>
+    <div class="container content-panel">
+    <div class="row">
+        <div class="span12">
+            <div class="form-horizontal ">
+                <div class="row">
+      <div class="span6">
+                        <table class="table">
+                            <th>Tên hóa đơn</th>
+                            <th>Ngày tạo</th>
+                            <th>Hạn giao hàng</th>
+                            <th>Trị giá</th>
+                            @foreach (var item in listorder)
+                            {
+                                <tr>
+                                    <td>@item.Name</td>
+                                    <td>@item.DateInfo.Value.ToString("dd/MM/yyyy")</td>
+                                    <td>@item.Deadline.Value.ToString("dd/MM/yyyy")</td>
+                                    <td class="money"style="margin-top:10px;">    @{
+     var tranloans = String.Format(System.Globalization.CultureInfo.CreateSpecificCulture("vi-VN"), "{0:C}", item.TotalCash);
+     tranloans = tranloan.Substring(0, tranloans.LastIndexOf(','));
+     @tranloan
+     } đ </td>
+                                </tr>
+                            }
+                          
+                        </table>
+                    </div>
+
+</div>
+  </div>
+            </div>
+        </div></div>
+ 
+

@@ -1,0 +1,65 @@
+.content-panel{
+
+	background-color:#FFFFFF;
+    border:1px solid #CCCCCC;
+    border-radius:10px;
+    box-shadow:0 2px 2px #ccc;   
+    min-height:130px;
+    padding:20px;
+	
+}
+
+h1, h2, h3, h4, h5, h6 {
+	margin: 0px;
+
+}
+
+
+.screen-shot{
+	width: 30%;
+
+}
+.paging-cell a
+{
+    border:1px solid #666;
+    padding:2px 5px;
+    margin:0 2px;
+    background-color: #666;
+    color:#fff !important;
+    
+    }
+.validate {
+color:red;
+}
+.money {
+    text-align:center;
+font-weight:bold;
+font-size:15px;
+}
+.mybtn {
+
+}
+    .mybtn:hover {
+    background-color:#ddd;
+ 
+    }
+.nameStaff {
+cursor:pointer;
+background-image:linear-gradient(to bottom, #FFC26C, #FFC26C);
+margin:5px;
+padding:5px;
+border-radius:4px 4px;
+
+}
+:hover.nameStaff {
+cursor:pointer;
+background-image:linear-gradient(to bottom, #FDAC38, #FDAC38);
+margin:5px;
+padding:5px;
+border-radius:4px 4px;
+
+}
+paper {
+width:50px
+
+}

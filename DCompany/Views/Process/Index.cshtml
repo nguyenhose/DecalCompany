@@ -1,0 +1,103 @@
+﻿@model IEnumerable<DCompany.Models.Process>
+@{ 
+    MvcPaging.IPagedList<DCompany.Models.Process> listPr = (MvcPaging.IPagedList<DCompany.Models.Process>)ViewBag.listPr;
+    var a = 0;}
+<div class="container">
+    <ul class="breadcrumb ">
+        <li class="active">
+            <h4>Tiến độ</h4>
+        </li>
+    </ul>
+</div>
+<div class="container content-panel">
+    @using (Ajax.BeginForm("Index", "Process",
+                            new AjaxOptions { UpdateTargetId = "grid-list", HttpMethod = "get", LoadingElementId = "loading", OnBegin = "beginPaging", OnSuccess = "successPaging", OnFailure = "failurePaging" },
+                            new { id = "frm-search" }))
+    {   
+        <div id="datetimepicker1" class="input-append date">
+            <input type="text" name="employee_name"  readonly placeholder="Chọn ngày.." />
+            <span class="add-on">
+                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+            </span>
+            <button class="btn btn-info" style="margin-left: 10px">Lọc</button>
+        </div>
+        <div id="grid-list">@Html.Partial("ListPro", listPr)</div>
+   
+    }
+</div>
+<hr />
+<div id="listE"></div>
+
+<script>
+    $(function () {
+        $('#datetimepicker1').datetimepicker({
+            language: 'pt-BR'
+        });
+    });
+    function beginPaging(args) {
+        //Animate
+        $('#grid-list').fadeOut('normal');
+    }
+    function successPaging() {
+        //  Animate
+        $('#grid-list').fadeIn('normal');
+
+    }
+    function ExportQ(id) {
+        $.ajax({
+            url: "/Process/ExportQuick",
+            type: "GET",
+            data: { Id: id },
+            success: function (data) {
+                $("#listE").html(data);
+            }
+        });
+    }
+    function Done(id) {
+        var sl = $("#done_" + id).val();
+        var usl = $("#undone_" + id).val();
+        $.ajax({
+            url: "/Process/CheckDone",
+            type: "GET",
+            data: { Id: id, SL: sl, USL: usl },
+            success: function (data) {
+                location.reload();
+            }
+        });
+    }
+    function checkIt(cb) {
+        if (cb.checked) {
+            var id = cb.value;
+            var al = "true";
+            $.ajax({
+                url: "/Process/CheckComplete",
+                type: "GET",
+                data: { Id: id, allChecked: al },
+                success: function (data) {
+                    alert("Đơn hàng đã được hoàn tất!");
+                    location.reload();
+                }
+            });
+        }
+        else {
+
+            var id = cb.value;
+            var al = "false";
+            $.ajax({
+                url: "/Process/CheckComplete",
+                type: "GET",
+                data: { Id: id, allChecked: al },
+                success: function (data) {
+                    location.reload();
+                }
+            });
+        }
+    }
+  
+    $(function () {
+        $('#datetimepicker1').datetimepicker({
+            language: 'pt-BR'
+        });
+    });
+
+</script>

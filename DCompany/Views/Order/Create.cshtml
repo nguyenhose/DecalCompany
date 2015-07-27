@@ -1,0 +1,216 @@
+﻿@model DCompany.Models.Order
+@using DCompany.Models
+@{
+    ViewBag.Title = "Create";
+    Customer customer = ViewBag.Customer;
+    MvcPaging.IPagedList<Order> oldOrder = ( MvcPaging.IPagedList<Order>)ViewBag.listOrder;
+}
+
+
+
+  @using (Html.BeginForm("Create","Order",FormMethod.Post, new{onsubmit="modify();"}))
+{
+  
+       <div style="display:none"> <input type="text" value="@customer.Id"  name="cusId" readonly/></div>
+       <div class="container">
+        <ul class="breadcrumb ">
+            <li class="active">
+                <h4>Khách hàng</h4>
+            </li>
+        </ul>
+         </div>
+       <div class="container content-panel">
+        <div class="row">
+            <div class="span12">
+                <div class="form-horizontal ">
+                    <div class="row">
+                        <div class="span6">
+                    <table class="table">
+                        <tr><td>Tên khách hàng:</td><td><b>@customer.Name</b></td></tr>
+                         <tr><td>Số điện thoại:</td><td><b>@customer.PhoneNumber</b></td></tr>
+                         <tr><td>Email:</td><td><b>@customer.Email</b></td></tr>
+                    </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+      <hr />
+         <div class="container">
+        <ul class="breadcrumb ">
+            <li class="active">
+                <h4>Tạo đơn hàng</h4>
+            </li>
+        </ul>
+    </div>
+      
+      
+      @Html.ValidationSummary(true)
+      @Html.HiddenFor(s=>s.CustomerId)
+      @Html.HiddenFor(s=>s.CreaterId)
+         <div class="container content-panel">
+        <div class="row">
+            <div class="span12">
+                <div class="form-horizontal ">
+                    <div class="row">
+                        <div class="span6">
+                            <div class="control-group">
+                                <label class="control-label" >Tên đơn hàng</label>
+                                <div class="controls">
+                                 
+                                  
+                                   @Html.EditorFor(model => model.Name)
+                                    <div class="validate">   @Html.ValidationMessageFor(model => model.Name)</div>
+                                </div>
+                            </div>
+                            <div class="control-group ">
+
+                                <label class="control-label" for="Email">Ngày giao</label>
+                                <div class="controls">
+                                     <div id="datetimepicker1" class="input-append date">
+                                             @Html.TextBoxFor(model => model.Deadline, new {@readonly= "readonly"})
+                                        <span class="add-on">
+                                         <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+                                         </i>
+                                        </span>
+                                    </div>
+                                       @if (ViewBag.Error != null) {<div class="validate"> @ViewBag.Error</div> }
+                                     <div class="validate">        @Html.ValidationMessageFor(model => model.Deadline)</div>
+                                </div>
+                                   
+                            </div>
+                              <div class="control-group">
+                                    <label class="control-label" >Ngày bắt đầu</label>
+                                   <div class="controls">
+                                     <div id="datetimepicker3" class="input-append date">
+                                             @Html.TextBoxFor(model => model.DateStart, new {@readonly= "readonly"})
+                                        <span class="add-on">
+                                         <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+                                         </i>
+                                        </span>
+                                    </div>
+                                     @*  @if (ViewBag.Error != null) {<div class="validate"> @ViewBag.Error</div> }
+                                     <div class="validate">        @Html.ValidationMessageFor(model => model.DateStart)</div>*@
+                                </div>
+                              </div>
+                            <div class="control-group">
+                                <label class="control-label" for="Note">Số tiền</label>
+                                <div class="controls">
+                                    @Html.TextBoxFor(model => Model.TotalCash, new { id = "cash", @class = "currency", type = "text" }) * VNĐ
+                           <div class="validate">              @Html.ValidationMessageFor(model => model.TotalCash)</div>
+                                </div>
+                            </div>
+                            <div class="control-group ">
+                                <label class="control-label" for="Email">Ghi chú</label>
+                                <div class="controls">
+                              @Html.TextAreaFor(model => model.Note)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button type="submit" class="btn btn-info"><i class="icon-plus icon-white"></i>Thêm đơn hàng</button>
+                           
+                             <div class="btn" onclick="backToDashBoard()">Quay lại</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+      <hr />
+  }
+      @using (Ajax.BeginForm("Create", "Order",
+                            new AjaxOptions { UpdateTargetId = "grid-list", HttpMethod = "get", LoadingElementId = "loading", OnBegin = "beginPaging", OnSuccess = "successPaging", OnFailure = "failurePaging" },
+                            new { id = "frm-search" }))
+      {
+           <div class="container">
+        <ul class="breadcrumb ">
+            <li class="active">
+                <h4>Danh sách đơn hàng</h4>
+            </li>
+        </ul>
+         </div>
+          <div class="input-append container">
+              <input class="span2" id="appendedInputButton" type="text" name="employee_name" placeholder="Name" />
+              <button class="btn" type="submit">
+                  <i class="icon-search"></i>&nbsp;Search</button>
+          </div>
+          <div id="grid-list">
+              @{ Html.RenderPartial("ListOrder", oldOrder); }
+          </div>
+      }
+<script type="text/javascript">
+  $(function() {
+    $('#datetimepicker1').datetimepicker({
+      language: 'pt-BR'
+    });
+  });
+  $(function () {
+      $('#datetimepicker3').datetimepicker({
+          language: 'pt-BR'
+      });
+  });
+  function beginPaging(args) {
+      // Animate
+      $('#grid-list').fadeOut('normal');
+  }
+  function successPaging() {
+      // Animate
+      $('#grid-list').fadeIn('normal');
+     
+  }
+  function failurePaging() {
+      alert("Could not retrieve list.");
+  }
+  function backToDashBoard() {
+      location.href = '/Order';
+  }
+  $(function () {
+      // jQuery formatCurrency plugin: http://plugins.jquery.com/project/formatCurrency
+
+      // Format while typing & warn on decimals entered, 2 decimal places
+      $('#cash').blur(function () {
+          $('#cash').html(null);
+          $(this).formatCurrency({ colorize: true, negativeFormat: '-%s%n', roundToDecimalPlace: 0 });
+      })
+      .keyup(function (e) {
+          var e = window.event || e;
+          var keyUnicode = e.charCode || e.keyCode;
+          if (e !== undefined) {
+              switch (keyUnicode) {
+                  case 16: break; // Shift
+                  case 17: break; // Ctrl
+                  case 18: break; // Alt
+                  case 27: this.value = ''; break; // Esc: clear entry
+                  case 35: break; // End
+                  case 36: break; // Home
+                  case 37: break; // cursor left
+                  case 38: break; // cursor up
+                  case 39: break; // cursor right
+                  case 40: break; // cursor down
+                  case 78: break; // N (Opera 9.63+ maps the "." from the number key section to the "N" key too!) (See: http://unixpapa.com/js/key.html search for ". Del")
+                  case 110: break; // . number block (Opera 9.63+ maps the "." from the number block to the "N" key (78) !!!)
+                  case 190: break; // .
+                  default: $(this).formatCurrency({ colorize: true, negativeFormat: '-%s%n', roundToDecimalPlace: -1, eventOnDecimalsEntered: true });
+              }
+          }
+      })
+      .bind('decimalsEntered', function (e, cents) {
+          if (String(cents).length > 2) {
+              var errorMsg = 'Please do not enter any cents (0.' + cents + ')';
+              $('#cash').html(errorMsg);
+              log('Event on decimals entered: ' + errorMsg);
+          }
+      });
+  });
+  function modify() {
+      var input = $("#cash").val();
+      input = input.replace(',', '');
+      $("#cash").val(input);
+
+  }
+</script>

@@ -1,0 +1,93 @@
+﻿@model DCompany.Models.Customer
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+@using (Html.BeginForm("Edit", "Customer", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(s => s.DateCreater)
+    @Html.HiddenFor(s => s.Invisible)
+    @Html.HiddenFor(s => s.CreatorId)
+    @Html.HiddenFor(s => s.Code)
+    @Html.ValidationSummary(true)
+    <div class="container">
+        <ul class="breadcrumb ">
+            <li class="active">
+                <h4>Sửa thông tin khách hàng</h4>
+            </li>
+        </ul>
+    </div>
+    <div class="container content-panel">
+        <div class="row">
+            <div class="span12">
+                <div class="form-horizontal ">
+                    <div class="row">
+                        <div class="span6">
+                            <div class="control-group">
+                                <label class="control-label" for="CustomerName">Tên khách hàng</label>
+                                <div class="controls">
+                                    @Html.EditorFor(model => model.Name) *
+              <div class="validate">@Html.ValidationMessageFor(model => model.Name)</div>
+                                </div>
+                            </div>
+                            <div class="control-group ">
+                                <label class="control-label" for="Email">Email</label>
+                                <div class="controls">
+                                    @Html.EditorFor(model => model.Email) *
+               <div class="validate">@Html.ValidationMessageFor(model => model.Email)</div>
+                                </div>
+                            </div>
+
+                            <div class="control-group ">
+                                <label class="control-label" for="Phone">Số điện thoại</label>
+                                <div class="controls">
+                                    @Html.EditorFor(model => model.PhoneNumber) *
+              <div class="validate">@Html.ValidationMessageFor(model => model.PhoneNumber)</div>
+                                </div>
+                            </div>
+                            <div class="control-group ">
+                                <label class="control-label" for="Address">Địa chỉ</label>
+                                <div class="controls">
+                                    @Html.EditorFor(model => model.Address) *
+               <div class="validate">@Html.ValidationMessageFor(model => model.Address)</div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="CompanyName">Công ty</label>
+                                <div class="controls">
+                                    @Html.EditorFor(model => model.CompanyName) *
+               <div class="validate">@Html.ValidationMessageFor(model => model.CompanyName)</div>
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label" for="Note">Ghi chú</label>
+                                <div class="controls">
+                                    @Html.TextAreaFor(model => model.Note) 
+              <div class="validate">@Html.ValidationMessageFor(model => model.Note)</div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button class="btn btn-primary">Lưu</button>
+                            <div class="btn" onclick="backToDashBoard()">Quay lại</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script>
+    function backToDashBoard() {
+        location.href = '/Customer';
+    }
+</script>
+
+

@@ -1,0 +1,85 @@
+﻿@using DCompany.Models
+@{
+    ViewBag.Title = "Index";
+    
+}
+<div class="container">
+    <ul class="breadcrumb ">
+        <li class="active">
+            <h4>Theo Dõi</h4>
+        </li>
+    </ul>
+</div>
+<div class="container content-panel">
+    <div class="row">
+        <div class="span12">
+            <div class="form-horizontal">
+         
+                <div class="span3">
+                  
+                       <div id="datetimepicker2" class="input-append date">
+                                             <input type="text" id="from" placeholder="Từ ngày.."/>
+                                        <span class="add-on">
+                                         <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+                                         </i>
+                                        </span>
+                                    </div>
+
+                </div>
+                <div class="span3">
+              
+                     <div id="datetimepicker1" class="input-append date">
+                                             <input type="text" id="to" placeholder="Đến ngày.."/>
+                                        <span class="add-on">
+                                         <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+                                         </i>
+                                        </span>
+                                    </div>
+                </div>
+                <div class="span3"><select id="module">
+    <option value="Task">Công việc hằng ngày</option>
+    <option value="Process">Quản lí tiến độ</option>
+    <option value="Store">Quản lí kho</option>
+    <option value="Payment">Quản lí thanh toán</option>
+</select></div>
+                <div class="span2"><button class="btn btn-warning" onclick="Tracking()">Theo dõi</button></div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>
+<hr />
+<div class="container content-panel">
+    <div>*Dữ liệu hiện <span style="color:red">màu đỏ</span> khi đã được chỉnh sửa hoặc xóa.</div>
+    <div id="Task">
+      
+    </div>
+</div>
+<script>
+    $(function () {
+        $('#datetimepicker1').datetimepicker({
+            language: 'pt-BR'
+        });
+    });
+    $(function () {
+        $('#datetimepicker2').datetimepicker({
+            language: 'pt-BR'
+        });
+    });
+    function Tracking() {
+        var FR = $("#from").val();
+        var T = $("#to").val();
+        var module = $("#module").val();
+        $.ajax({
+       url: "/Tracking/Tracking",
+        type: "GET",
+        data: { FROM: FR, TO: T, Module: module },
+        success: function (data) {
+            $("#Task").html(data);
+        },
+    });
+    }
+</script>

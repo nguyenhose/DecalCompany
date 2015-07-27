@@ -1,0 +1,52 @@
+﻿@model IEnumerable<DCompany.Models.Store>
+
+@{
+    ViewBag.Title = "Index";
+    MvcPaging.IPagedList<DCompany.Models.Store> oldPayment = (MvcPaging.IPagedList<DCompany.Models.Store>)ViewBag.store;
+}
+
+
+<div class="container">
+    <ul class="breadcrumb ">
+        <li class="active">
+            <h4>Xem kho</h4>
+        </li>
+    </ul>
+</div>
+<div class="container content-panel">
+    <div class="row">
+        <div class="span12">
+            <div>
+                <div>
+                    <div id="listStore">
+                        @using (Ajax.BeginForm("Index", "Store",
+                            new AjaxOptions { UpdateTargetId = "grid-list", HttpMethod = "get", LoadingElementId = "loading", OnBegin = "beginPaging", OnSuccess = "successPaging", OnFailure = "failurePaging" },
+                            new { id = "frm-search" }))
+{ 
+                             <div id="grid-list"> @Html.Partial("ListStore", oldPayment)</div>
+   
+                        }
+
+</div>
+
+                  
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+  <script>
+    function beginPaging(args) {
+        // Animate
+        $('#grid-list').fadeOut('normal');
+    }
+    function successPaging() {
+        // Animate
+        $('#grid-list').fadeIn('normal');
+
+    }
+    function failurePaging() {
+
+    }
+</script>

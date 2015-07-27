@@ -1,0 +1,126 @@
+﻿@model DCompany.Models.Order
+
+@{
+    ViewBag.Title = "Order";
+}
+
+@using (Html.BeginForm("Edit", "Order", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(s => s.State)
+    @Html.HiddenFor(s => s.CustomerId)
+    @Html.HiddenFor(s => s.CreaterId)
+    @Html.HiddenFor(s => s.Invisible)
+    @Html.HiddenFor(s => s.Id)
+    @Html.ValidationSummary(true)
+    <div class="container">
+        <ul class="breadcrumb ">
+            <li class="active">
+                <h4>Sửa thông tin đơn hàng</h4>
+            </li>
+        </ul>
+    </div>
+    <div class="container content-panel">
+        <div class="row">
+            <div class="span12">
+                <div class="form-horizontal ">
+                    <div class="row">
+                        <div class="span6">
+                            <div class="control-group">
+                                <label class="control-label" for="CustomerName">Tên đơn hàng</label>
+                                <div class="controls">
+                                    @Html.EditorFor(model => model.Name) *
+              <div class="validate">@Html.ValidationMessageFor(model => model.Name)</div>
+                                </div>
+                            </div>
+                            <div class="control-group ">
+                                <label class="control-label" for="Email">Ngày kí</label>
+                                <div class="controls">
+                                    <div id="datetimepicker2" class="input-append date">
+                                        @Html.TextBoxFor(model => model.DateInfo, new { @Value = Model.DateInfo.Value.ToString("d") })
+                                        <span class="add-on">
+                                            <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                        </span>
+                                    </div>
+                                    <div class="validate">@Html.ValidationMessageFor(model => model.DateInfo)</div>
+                                </div>
+                            </div>
+                            <div class="control-group ">
+                                <label class="control-label" for="Email">Hạn Giao</label>
+                                <div class="controls">
+                                    <div id="datetimepicker1" class="input-append date">
+                                        @Html.TextBoxFor(model => model.Deadline, new { @Value = Model.Deadline.Value.ToString("d") ,@readonly= "readonly"})
+                                        <span class="add-on">
+                                            <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                        </span>
+                                    </div>
+                                    <div class="validate">@Html.ValidationMessageFor(model => model.Deadline)</div>
+                                </div>
+                                  
+                            </div>
+                             <div class="control-group">
+                                    <label class="control-label" >Ngày bắt đầu</label>
+                                   <div class="controls">
+                                     <div id="datetimepicker3" class="input-append date">
+                                             @Html.TextBoxFor(model => model.DateStart, new {@readonly= "readonly"})
+                                        <span class="add-on">
+                                         <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+                                         </i>
+                                        </span>
+                                    </div>
+                                       @if (ViewBag.Error != null) {<div class="validate"> @ViewBag.Error</div> }
+                                     <div class="validate">        @Html.ValidationMessageFor(model => model.DateStart)</div>
+                                </div>
+                              </div>
+                            <div class="control-group ">
+                                <label class="control-label" for="Address">Số tiền</label>
+                                <div class="controls">
+                                    @Html.EditorFor(model => model.TotalCash) *
+               <div class="validate">@Html.ValidationMessageFor(model => model.TotalCash)</div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="Note">Ghi chú</label>
+                                <div class="controls">
+                                    @Html.TextAreaFor(model => model.Note)
+                                    <div class="validate">@Html.ValidationMessageFor(model => model.Note)</div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button class="btn btn-primary">Lưu</button>
+                            <div class="btn" onclick="backToDashBoard()">Quay lại</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script>
+    function backToDashBoard() {
+        location.href = '/Order';
+    }
+    $(function () {
+        $('#datetimepicker1').datetimepicker({
+            language: 'pt-BR'
+        });
+    });
+    $(function () {
+        $('#datetimepicker2').datetimepicker({
+            language: 'pt-BR'
+        });
+    });
+    $(function () {
+        $('#datetimepicker3').datetimepicker({
+            language: 'pt-BR'
+        });
+    });
+</script>
+
+

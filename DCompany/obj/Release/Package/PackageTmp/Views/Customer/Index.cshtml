@@ -1,0 +1,50 @@
+﻿@model IEnumerable<DCompany.Models.Customer>
+
+
+@{
+    ViewBag.Title = "Index";
+
+    MvcPaging.IPagedList<DCompany.Models.Customer> listCus = (MvcPaging.IPagedList<DCompany.Models.Customer>)ViewBag.listCus;
+    
+}
+<div class="container">
+  <ul class="breadcrumb ">
+    <li class="active">
+      <h4>Xem danh sách khách hàng</h4>
+    </li>
+  </ul>
+</div>
+
+    <div class="container content-panel">
+  @using (Ajax.BeginForm("Index", "Customer",
+                            new AjaxOptions { UpdateTargetId = "grid-list", HttpMethod = "get", LoadingElementId = "loading", OnBegin = "beginPaging", OnSuccess = "successPaging", OnFailure = "failurePaging" },
+                            new { id = "frm-search" }))
+      {
+        <div class="input-append">
+        <input class="span2" id="appendedInputButton" type="text" name="employee_name" placeholder="Name">
+        <button class="btn" type="submit">
+            <i class="icon-search"></i>&nbsp;Tìm</button>
+    </div>
+  <div id="grid-list">
+              @{ Html.RenderPartial("ListCus", listCus); }
+          </div>
+  }</div>
+
+<script>
+    $(function () {
+        $('#datetimepicker1').datetimepicker({
+            language: 'pt-BR'
+        });
+    });
+    function beginPaging(args) {
+         //Animate
+        $('#grid-list').fadeOut('normal');
+    }
+    function successPaging() {
+       //  Animate
+        $('#grid-list').fadeIn('normal');
+
+    }
+    </script>
+
+

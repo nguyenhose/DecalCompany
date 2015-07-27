@@ -1,0 +1,82 @@
+﻿@{
+    Layout = null;
+    @model List<DCompany.Models.Store>
+}
+
+
+<div class="form-horizontal">
+    <div class="row">
+
+        @if (Model != null)
+        {
+             var list = Model.Select(s => s.Staff).ToList().Distinct();
+            <div class="span2">
+                <h4>Theo nhân viên</h4>
+                @foreach (var name in list)
+                {
+                    <div class="nameStaff" onclick="Filter(@name.Id)">
+                        @name.StaffName
+                    </div>
+               
+                }
+            </div>
+            <div class="span8">
+                 <table class="table" id="daica">
+                <th>Tên sản phẩm</th>
+                <th>Xuất xứ</th>
+                <th>Giá sản phẩm</th>
+
+                <th>Thời gian</th>
+
+                <th>Số lượng</th>
+                <th>Nhân viên </th>
+                @foreach (var item in Model)
+                {  
+                  <tr class="@item.Staff.Id">
+                        @if (item.Invisible == true)
+                        { <td style="color: red">
+                            @item.ProductName
+                        </td>}
+                        else
+                        {
+                            <td>
+                                @item.ProductName
+                            </td>}
+
+                        <td>
+                            @item.SupplierName
+                        </td>
+                        <td>
+                            @{
+                        var cash = String.Format(System.Globalization.CultureInfo.CreateSpecificCulture("vi-VN"), "{0:C}", item.ProductPrice);
+                        cash = cash.Substring(0, cash.LastIndexOf(','));
+                                @cash 
+                   
+                            }(đ)
+                        </td>
+
+                        <td>
+                            @item.Time.Value.ToString("dd/MM/yyyy HH:mm")
+                        </td>
+
+                        <td>
+                            @{
+                        var no = String.Format(System.Globalization.CultureInfo.CreateSpecificCulture("vi-VN"), "{0:C}", item.CurrentQ);
+                        no = no.Substring(0, no.LastIndexOf(','));
+                                @no 
+                   
+                            }(@item.Note)
+              
+                        </td>
+                        <td>
+                            @item.Staff.StaffName
+                        </td>
+                    </tr>
+                }
+            </table>
+            </div>
+           
+        }
+
+    </div>
+</div>

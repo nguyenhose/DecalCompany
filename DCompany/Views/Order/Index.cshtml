@@ -1,0 +1,99 @@
+﻿@model IEnumerable<DCompany.Models.Order>
+
+@{
+    ViewBag.Title = "Index";
+    MvcPaging.IPagedList<DCompany.Models.Order> oldOrder = (MvcPaging.IPagedList<DCompany.Models.Order>)ViewBag.listOrder;
+}
+
+<div class="container">
+  <ul class="breadcrumb ">
+    <li class="active">
+      <h4>Xem danh sách đơn hàng</h4>
+    </li>
+  </ul>
+</div>
+<div class="container">
+  @using (Ajax.BeginForm("Index", "Order",
+                            new AjaxOptions { UpdateTargetId = "grid-list", HttpMethod = "get", LoadingElementId = "loading", OnBegin = "beginPaging", OnSuccess = "successPaging", OnFailure = "failurePaging" },
+                            new { id = "frm-search" }))
+      {
+   <div id="grid-list">
+              @{ Html.RenderPartial("ListProcessOrder", oldOrder); }
+          </div>
+  }
+</div>		
+<script>
+    $(function () {
+        $('#datetimepicker1').datetimepicker({
+            language: 'pt-BR'
+        });
+    });
+    function beginPaging(args) {
+        // Animate
+        $('#grid-list').fadeOut('normal');
+    }
+    function successPaging() {
+        // Animate
+        $('#grid-list').fadeIn('normal');
+
+    }
+    function failurePaging() {
+        
+    }
+    function changeState(stateId, orderId) {
+        var confirmId = orderId;
+        if (stateId == 4) { stateId = 3; }
+        if (stateId != 3 & stateId !=6 && stateId<7) {
+            if (stateId == 5) { stateId = stateId + 2; }
+            else { stateId = stateId + 1; }
+           
+            $.ajax({
+                url: "/Order/ChangeState",
+                type: "GET",
+                data: { Id: stateId, OrderId: orderId },
+                success: function (data) {
+                    location.reload();
+                }
+            });
+
+        }
+        else{
+            if(stateId == 3 || stateId==6){  
+                document.getElementById(confirmId).setAttribute("style", "display:normal");
+            }
+        }
+      
+         
+    }
+    function changeState2(stateId, orderId) {
+        if (stateId == 4) { stateId = 3; }
+        if (stateId == 3) {
+            stateId = stateId + 2;
+        }
+        else if (stateId == 6) { stateId = stateId - 1; }
+        $.ajax({
+            url: "/Order/ChangeState",
+            type: "GET",
+            data: { Id: stateId, OrderId: orderId },
+            success: function (data) {
+                location.reload();
+            }
+        });
+    }
+        
+    function changeState3(stateId, orderId) {
+        if (stateId == 4) { stateId = 3; }
+        if (stateId == 6) {
+            stateId = stateId - 2;
+        }
+        else if (stateId == 3) { stateId = stateId + 1; }
+        $.ajax({
+            url: "/Order/ChangeState",
+            type: "GET",
+            data: { Id: stateId, OrderId: orderId },
+            success: function (data) {
+                location.reload();
+            }
+        });
+    }
+</script>

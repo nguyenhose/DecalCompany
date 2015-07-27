@@ -1,0 +1,295 @@
+﻿@model DCompany.Models.Store
+
+@{
+    ViewBag.Title = "Index";
+    var listStore = (List<DCompany.Models.Store>)ViewBag.list;
+}
+
+<div class="container">
+    <ul class="breadcrumb ">
+        <li class="active">
+            <h4>Nhập kho</h4>
+        </li>
+    </ul>
+</div>
+@using (Html.BeginForm("Create","Store",FormMethod.Post, new{onsubmit="modify();"}))
+{
+    @Html.HiddenFor(model => Model.OutputQ)
+    @Html.HiddenFor(model => Model.State)
+    @Html.HiddenFor(model => Model.CustomerId)
+    @Html.HiddenFor(model => Model.CreatorId)
+    <div class="container content-panel">
+        <div class="row">
+            <div class="span12">
+                <div class="form-horizontal ">
+                    <div class="row">
+                        <div class="span6">
+                            <div class="control-group">
+                                <label class="control-label">Tên vật tư</label>
+                                <div class="controls">
+                                    @Html.EditorFor(model => Model.ProductName) *
+                                <div class="validate">@Html.ValidationMessageFor(model => Model.ProductName)</div>
+                                </div>
+
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Số lượng</label>
+                                <div class="controls">
+                                    @Html.TextBoxFor(Model => Model.CurrentQ, new { id = "current" }) *
+                                  <div class="validate">@Html.ValidationMessageFor(model => Model.CurrentQ)</div>
+                                </div>
+
+                            </div>
+                            <div class="control-group ">
+                                <label class="control-label" for="Hour">Đơn vị</label>
+                                <div class="controls">
+
+                                    @{
+    List<SelectListItem> listItems = new List<SelectListItem>();
+    listItems.Add(new SelectListItem
+         {
+             Text = "Thùng",
+             Value = "Thùng"
+         });
+    listItems.Add(new SelectListItem
+         {
+             Text = "Tờ",
+             Value = "Tờ",
+         });
+    listItems.Add(new SelectListItem
+         {
+             Text = "Kí",
+             Value = "Kí"
+         });
+                                    }
+
+                                    @Html.DropDownListFor(model => model.Note, listItems, "-- Chọn đơn vị  --", new { @onchange = "choosePaper(this.value)" })
+                                    <div class="validate">@Html.ValidationMessageFor(model => Model.Note)</div> 
+
+                                </div>
+
+                            </div>
+                            <div class="control-group" id="Paper" style="display: none">
+                                <div class="controls">
+                                    <span>@Html.TextBoxFor(model => Model.Height, new { @style = "width:30px", id = "height" }) cm&sup2</span> x <span>@Html.TextBoxFor(model => Model.Width, new { @style = "width:30px", id = "width" }) cm&sup2</span>
+                                    <span class="btn" onclick="Square()"><i class="icon icon-arrow-right"></i></span>
+                                    <span>@Html.TextBoxFor(model => Model.Square, new { id = "total", @readonly = "readonly", @style = "width:50px;margin-left:4px" })</span>  m&sup2; 
+                                    <div class="validate">@Html.ValidationMessageFor(model => Model.Height)</div>
+                                    <div class="validate">@Html.ValidationMessageFor(model => Model.Width)</div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Giá sản phẩm</label>
+                                <div class="controls">
+                                    @Html.TextBoxFor(model => Model.ProductPrice, new { id = "price", @class = "currency", type = "text" }) *
+                                        <div class="validate">@Html.ValidationMessageFor(model => Model.ProductPrice)</div>
+                                </div>
+
+                            </div>
+                            <div class="control-group">
+                            
+                                <div class="controls">
+
+                                    <span class="btn" onclick="calPrice()">Tổng tiền  <i class="icon-arrow-right"></i></span>
+                                    <span>
+                                        <input id="totalP" class="currency" style="width: 90px" >
+                                    </span>
+                                </div>
+
+                            </div>
+                            <div class="control-group">
+                            </div>
+                            <div class="control-group ">
+                                <label class="control-label" for="Hour">Xuất sứ</label>
+                                <div class="controls">
+                                    @Html.EditorFor(model => Model.SupplierName) *
+                                   <div class="validate">@Html.ValidationMessageFor(model => Model.SupplierName)</div>
+                                </div>
+
+                            </div>
+
+                            <div class="control-group ">
+                                <label class="control-label" for="Email">Ngày nhập</label>
+                                <div class="controls">
+                                    <div id="datetimepicker1" class="input-append date">
+                                        @Html.TextBoxFor(model => Model.Time, new { @readonly = "readonly" })
+                                        <span class="add-on">
+                                            <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                        </span>
+                                    </div>
+                                    *
+                                     <div class="validate">@Html.ValidationMessageFor(model => Model.Time)</div>
+                                </div>
+
+                            </div>
+                            <div class="control-group">
+                                <div class="controls">
+                                    <button class="btn btn-primary"   >Lưu</button>
+                                    <div class="btn" onclick="backToDashBoard()">Quay lại</div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    $(function () {
+        $('#datetimepicker1').datetimepicker({
+            language: 'pt-BR'
+        });
+    });
+    function Import() {
+        var name = $("#productName").val();
+        var quantity = $("#quantity").val();
+        var supplier = $("#supplierName").val();
+        var price = $("#price").val();
+        var note = $("#note").val();
+        var date = $("#date").val();
+        $.ajax({
+            url: "/Store/Import",
+            type: "GET",
+            data: { Name: name, Supplier: supplier, Quantity: quantity, Note: note, Date: date, Price: price },
+            success: function (data) {
+                location.reload();
+            }
+        });
+
+    }
+    function choosePaper(value) {
+        if (value == "Tờ") {
+            $("#Paper").attr("style", "display:normal");
+        }
+    }
+    function Square() {
+        var h = $("#height").val();
+        var w = $("#width").val();
+        var c = $("#current").val();
+        var d = (h * (w/100) * (c/100));
+        $("#total").val(d);
+
+    }
+    function calPrice() {
+        var p = $("#price").val();
+        var c = $("#current").val();
+        var non = Number(p.replace(/[^0-9\.]+/g, ""));
+        $("#totalP").val(non * c);
+    }
+    function modify() {
+        var input = $("#price").val();
+        input = input.replace(',', '');
+        $("#price").val(input);
+
+    }
+    function backToDashBoard() {
+        location.href = '/Store';
+    }
+    $(function () {
+        // jQuery formatCurrency plugin: http://plugins.jquery.com/project/formatCurrency
+
+        // Format while typing & warn on decimals entered, 2 decimal places
+        $('#price').blur(function () {
+            $('#price').html(null);
+            $(this).formatCurrency({ colorize: true, negativeFormat: '-%s%n', roundToDecimalPlace: 0 });
+        })
+        .keyup(function (e) {
+            var e = window.event || e;
+            var keyUnicode = e.charCode || e.keyCode;
+            if (e !== undefined) {
+                switch (keyUnicode) {
+                    case 16: break; // Shift
+                    case 17: break; // Ctrl
+                    case 18: break; // Alt
+                    case 27: this.value = ''; break; // Esc: clear entry
+                    case 35: break; // End
+                    case 36: break; // Home
+                    case 37: break; // cursor left
+                    case 38: break; // cursor up
+                    case 39: break; // cursor right
+                    case 40: break; // cursor down
+                    case 78: break; // N (Opera 9.63+ maps the "." from the number key section to the "N" key too!) (See: http://unixpapa.com/js/key.html search for ". Del")
+                    case 110: break; // . number block (Opera 9.63+ maps the "." from the number block to the "N" key (78) !!!)
+                    case 190: break; // .
+                    default: $(this).formatCurrency({ colorize: true, negativeFormat: '-%s%n', roundToDecimalPlace: -1, eventOnDecimalsEntered: true });
+                }
+            }
+        })
+        .bind('decimalsEntered', function (e, cents) {
+            if (String(cents).length > 2) {
+                var errorMsg = 'Please do not enter any cents (0.' + cents + ')';
+                $('#price').html(errorMsg);
+                log('Event on decimals entered: ' + errorMsg);
+            }
+        });
+
+
+        // Warn on decimals entered, 2 decimal places
+        $('#warnOnDecimalsEntered2').blur(function () {
+            $('#warnOnDecimalsEnteredNotification2').html(null);
+            $(this).formatCurrency({ roundToDecimalPlace: 2, eventOnDecimalsEntered: true });
+        })
+        .bind('decimalsEntered', function (e, cents) {
+            var errorMsg = 'Please do not enter any cents (0.' + cents + ')';
+            $('#warnOnDecimalsEnteredNotification2').html(errorMsg);
+            log('Event on decimals entered: ' + errorMsg);
+        });
+
+
+        // Format while typing & warn on decimals entered, no cents
+        $('#formatWhileTypingAndWarnOnDecimalsEntered').blur(function () {
+            $('#formatWhileTypingAndWarnOnDecimalsEnteredNotification').html(null);
+            $(this).formatCurrency({ colorize: true, negativeFormat: '-%s%n', roundToDecimalPlace: 0 });
+        })
+        .keyup(function (e) {
+            var e = window.event || e;
+            var keyUnicode = e.charCode || e.keyCode;
+            if (e !== undefined) {
+                switch (keyUnicode) {
+                    case 16: break; // Shift
+                    case 27: this.value = ''; break; // Esc: clear entry
+                    case 35: break; // End
+                    case 36: break; // Home
+                    case 37: break; // cursor left
+                    case 38: break; // cursor up
+                    case 39: break; // cursor right
+                    case 40: break; // cursor down
+                    case 78: break; // N (Opera 9.63+ maps the "." from the number key section to the "N" key too!) (See: http://unixpapa.com/js/key.html search for ". Del")
+                    case 110: break; // . number block (Opera 9.63+ maps the "." from the number block to the "N" key (78) !!!)
+                    case 190: break; // .
+                    default: $(this).formatCurrency({ colorize: true, negativeFormat: '-%s%n', roundToDecimalPlace: -1, eventOnDecimalsEntered: true });
+                }
+            }
+        })
+        .bind('decimalsEntered', function (e, cents) {
+            var errorMsg = 'Please do not enter any cents (0.' + cents + ')';
+            $('#formatWhileTypingAndWarnOnDecimalsEnteredNotification').html(errorMsg);
+            log('Event on decimals entered: ' + errorMsg);
+        });
+
+
+        // Warn on decimals entered, no cents
+        $('#warnOnDecimalsEntered').blur(function () {
+            $('#warnOnDecimalsEnteredNotification').html(null);
+            $(this).formatCurrency({ roundToDecimalPlace: 0, eventOnDecimalsEntered: true });
+        })
+        .bind('decimalsEntered', function (e, cents) {
+            var errorMsg = 'Please do not enter any cents (0.' + cents + ')';
+            $('#warnOnDecimalsEnteredNotification').html(errorMsg);
+            log('Event on decimals entered: ' + errorMsg);
+        });
+
+
+        function log(text) {
+            $('#divLog').prepend('<div>' + text + '</div>');
+        }
+
+        $('#clearLog').click(function () {
+            $('#divLog').empty();
+        });
+
+    });
+</script>

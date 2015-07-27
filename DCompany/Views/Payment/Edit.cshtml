@@ -1,0 +1,68 @@
+﻿@model DCompany.Models.PayMent
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+@using (Html.BeginForm("Edit", "Payment", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(s=>s.UserId)
+    @Html.HiddenFor(s=>s.Invisible)
+     @Html.HiddenFor(s=>s.CustomerId)
+     @Html.HiddenFor(s=>s.DatePay)
+    @Html.ValidationSummary(true)
+    <div class="container">
+        <ul class="breadcrumb ">
+            <li class="active">
+                <h4>Sửa thông tin khách hàng</h4>
+            </li>
+        </ul>
+    </div>
+    <div class="container content-panel">
+        <div class="row">
+            <div class="span12">
+                <div class="form-horizontal ">
+                    <div class="row">
+                        <div class="span6">
+                            <div class="control-group">
+                                <label class="control-label" for="CustomerName">Số tiền</label>
+                                <div class="controls">
+                                    @Html.EditorFor(model => model.Cash) *
+              <div class="validate">     @Html.ValidationMessageFor(model => model.Cash)</div>
+                                </div>
+                            </div>
+                                <div class="control-group" style="margin-left:150px">
+                                <img src="/img/@Model.ImageUrl"  width="200px" height="200px"/>
+                            </div>
+                          <div class="control-group ">
+                                    <label class="control-label" for="Phone">Ảnh Hóa đơn</label>
+                                <div class="controls">
+                                      <input type="file" name="fileImage" />
+                                </div>
+                                 @Html.HiddenFor(model => model.ImageUrl)
+                          <div class="validate">             @Html.ValidationMessageFor(model => model.ImageUrl)</div>
+                                    </div>
+                        </div>
+                  
+                            
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button class="btn btn-primary">Lưu</button>
+                            <div class="btn" onclick="backToDashBoard()">Quay lại</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script>
+    function backToDashBoard() {
+        location.href = '/Customer';
+    }
+</script>
+
+
+

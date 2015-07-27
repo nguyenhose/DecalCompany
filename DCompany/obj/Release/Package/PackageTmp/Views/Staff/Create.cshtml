@@ -1,0 +1,144 @@
+﻿@model DCompany.Models.Staff
+
+@{
+    ViewBag.Title = "Create";
+}
+
+@using (Html.BeginForm("Create", "Staff", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+
+    <div class="container">
+        <ul class="breadcrumb ">
+            <li class="active">
+                <h4>Tạo nhân viên</h4>
+            </li>
+        </ul>
+    </div>
+    <div class="container content-panel">
+        <div class="row">
+            <div class="span12">
+                <div class="form-horizontal ">
+                    <div class="row">
+                        <div class="span6">
+                            <div class="control-group">
+                                <label class="control-label" for="CustomerName">Tên Nhân Viên</label>
+                                <div class="controls">
+                                    @Html.EditorFor(model => model.StaffName) *
+                                    <div class="validate">@Html.ValidationMessageFor(model => model.StaffName)</div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="CustomerName">Mật khẩu</label>
+                                <div class="controls">
+                                    @Html.PasswordFor(model => model.Password) *
+                 <div class="validate">@Html.ValidationMessageFor(model => model.Password)</div>
+                                </div>
+                            </div>
+                            <div class="control-group ">
+                                <label class="control-label" for="Email">Email</label>
+                                <div class="controls">
+                                    @Html.EditorFor(model => model.Email) *
+               <div class="validate">@Html.ValidationMessageFor(model => model.Email)</div>
+                                </div>
+                            </div>
+                            <div class="control-group ">
+                                <label class="control-label" for="Phone">Số điện thoại</label>
+                                <div class="controls">
+                                    @Html.EditorFor(model => model.PhoneNumber) *
+                      <div class="validate">@Html.ValidationMessageFor(model => model.PhoneNumber)</div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="Note">Ghi chú</label>
+                                <div class="controls">
+                                    @Html.TextAreaFor(model => model.Note)
+                                    @Html.ValidationMessageFor(model => model.Note)
+                                </div>
+                            </div>
+
+                            <div class="control-group ">
+                                <label class="control-label" for="Phone">Ảnh đại diện</label>
+                                <div class="controls">
+                                    <input type="file" name="fileImage" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="span6" style="line-height: 30px">
+                            <ul class="breadcrumb ">
+                                <li class="active">
+                                    <h4>Quyền hạn của nhân viên</h4>
+                                </li>
+                            </ul>
+                            <table style="line-height: 25px">
+                                <tr>
+                                    <td></td>
+                                    <td><i class="icon-eye-open"></i></td>
+                                    <td><i class="icon-edit"></i></td>
+                                </tr>
+                                <tr>
+                                    <td>Quản lí khách hàng</td>
+                                    <td>
+                                        <input type="checkbox" name="customer" checked /></td>
+                                    <td>
+                                        <input type="checkbox" name="customer_edit" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Quản lí nhân viên</td>
+                                    <td>
+                                        <input type="checkbox" name="staffs" />
+                                    </td>
+                                    <td>
+                                        <input type="checkbox" name="staffs_edit" /></td>
+                                </tr>
+                                <tr>
+                                    <td>Quản lí tiến độ</td>
+                                    <td>
+                                        <input type="checkbox" name="process" /></td>
+                                    <td>
+                                        <input type="checkbox" name="process_edit" /></td>
+                                </tr>
+                                <tr>
+                                    <td>Quản lí hóa đơn</td>
+                                    <td>
+                                        <input type="checkbox" name="order" /></td>
+                                    <td>
+                                        <input type="checkbox" name="order_edit" /></td>
+                                </tr>
+                                <tr>
+                                    <td>Quản lí kho</td>
+                                    <td>
+                                        <input type="checkbox" name="store" /></td>
+                                    <td>
+                                        <input type="checkbox" name="store_edit" /></td>
+                                </tr>
+                                <tr>
+                                    <td>Xác nhận thanh toán/ Công nợ</td>
+                                    <td>
+                                        <input type="checkbox" name="finance" />
+                                    </td>
+                                    <td>
+                                        <input type="checkbox" name="finance_edit" /></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button type="submit" class="btn btn-primary">Lưu</button>
+                            <div class="btn" onclick="backToDashBoard()">Quay lại</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script>
+    function backToDashBoard() {
+        location.href = '/Staff';
+    }
+</script>
+
+

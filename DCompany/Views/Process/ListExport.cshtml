@@ -1,0 +1,146 @@
+﻿@model List<DCompany.Models.Store>
+<div class="container">
+    <ul class="breadcrumb ">
+        <li class="active">
+            <h4>Xuất kho cho đơn hàng @ViewBag.OrderName</h4>
+        </li>
+    </ul>
+</div>
+<div class="container content-panel">
+    <table border="1" style="color: Black; background-color: White; border-color: #999999; border-width: 1px; border-style: Solid; width: 100%; border-collapse: collapse;">
+
+    <tr style="color: White; background-color: Black; font-weight: bold;">
+        <th>Thông tin vật tư
+        </th>
+        <th>Đã xuất kho</th>
+        <th>Tồn kho</th>
+        @if (ViewBag.AllowEdit == true)
+        {
+            <th></th>
+            <th></th>
+                                       }
+
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                <table class="table">
+                    <tr>
+                        <td>Tên vật tư:</td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ProductName)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Xuất sứ:</td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SupplierName)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Ngày thao tác gần nhất:</td>
+                        <td>
+                            @item.Time.Value.ToString("dd/MM/yyyy HH:mm")
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Tổng giá nhập:</td>
+                        <td>
+                            <div class="money" style="margin-top: 10px; text-align: left">
+                                @{
+                            var tranloans = String.Format(System.Globalization.CultureInfo.CreateSpecificCulture("vi-VN"), "{0:C}", item.ProductPrice);
+                            tranloans = tranloans.Substring(0, tranloans.LastIndexOf(','));
+                                    @tranloans 
+                                }đ
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+
+            <td style="text-align: center; color: green; font-weight: bold"><i class='icon-arrow-up'></i>@Html.DisplayFor(modelItem => item.OutputQ) </td>
+
+            <td style="text-align: center; color: red; font-weight: bold">@{
+                            var cur = String.Format(System.Globalization.CultureInfo.CreateSpecificCulture("vi-VN"), "{0:C}", item.CurrentQ);
+                            cur = cur.Substring(0, cur.LastIndexOf(','));
+                @cur 
+            }(@item.Note)</td>
+            @if (ViewBag.AllowEdit == true)
+            {
+                <td style="text-align: center">
+                    @if (item.Invisible == false)
+                    {   <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal_@item.Id">
+                                                        Xuất kho
+                                                    </button>}
+                    <div class="modal fade" id="myModal_@item.Id" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title" id="myModalLabel">Xuất kho cho đơn hàng @ViewBag.OrderName</h4>
+                                </div>
+                                <div class="modal-body" style="text-align: center">
+                                    <div>Vật tư @item.ProductName đang có @Html.DisplayFor(modelItem => item.CurrentQ) (@item.Note)</div>
+                                    <hr />
+                                    <div>Số lượng xuất kho:
+                                        <input type="text" id="export_@item.Id" style="width:50px"/>
+                                        (@item.Note)</div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                                    <button type="button" class="btn btn-primary" onclick="Export(@item.Id)">Xuất kho</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td style="text-align: center">
+                    <div onclick="deleteConfirm(@item.Id)" class="btn btn-danger">
+                        <i class="icon-trash icon-white"></i>
+                        Xóa
+                    </div>
+                </td>
+            }
+        </tr>
+                        }
+</table>
+
+</div>
+
+
+<script>
+    function Export(id) {
+        var ex = $("#export_" + id + "").val();
+        var processId = @ViewBag.OrderId;
+        var quynh = parseInt(ex);
+        if (quynh > 0) {
+            $.ajax({
+                url: "/Store/ExportS",
+                type: "GET",
+                data: { Export: ex, ID: id, ProcessId: processId },
+                success: function (data) {
+                    location.reload();
+                }
+            });
+        }
+        else { alert("Vui lòng nhập số"); }
+
+    }
+    function deleteConfirm(id) {
+        var ok = confirm("Bạn có chắc chắn xóa ?");
+        if (ok) {
+            $.ajax({
+                url: "/Store/DeleteConfirmed",
+                type: "GET",
+                data: { Id: id },
+                success: function (data) {
+                    location.reload();
+                }
+            });
+        }
+
+
+    }
+</script>
